@@ -10,7 +10,7 @@ public final class Server
     /** Returns a string with the url of the video's MP4 */
     class func videoURL (url:String, _ quaility:Int, _ response:(String)->())
     {
-        Network.GET("https://custom_backend.com/video?u=\(url)&q=\(quaility)p")
+        Network.GET("https://custom_backend_test.com/video?u=\(url)&q=\(quaility)p")
         {
             (code, data) -> () in
             
@@ -27,7 +27,7 @@ public final class Server
     /** Returns an array of videos from a query */
     class func search (query:String, _ indexAt:Int, _ response:([Video])->())
     {
-        Network.GET("https://custom_backend.com/search?s=\(query.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet())!)&i=\(indexAt)")
+        Network.GET("https://custom_backend_test.com/search?s=\(query.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet())!)&i=\(indexAt)")
         {
             (code, data) -> () in
             
@@ -39,7 +39,7 @@ public final class Server
     /** Returns an array of recent videos from an associated Channel ID */
     class func sub (subID:String, _ response:([Video])->())
     {
-        Network.GET("https://custom_backend.com/channel?c=\(subID)")
+        Network.GET("https://custom_backend_test.com/channel?c=\(subID)")
         {
             (code, data) -> () in
             
@@ -53,7 +53,7 @@ public final class Server
     {
         let temp = subs.joinWithSeparator(",")
         
-        Network.GET("https://custom_backend.com/now?c=\(temp)")
+        Network.GET("https://custom_backend_test.com/now?c=\(temp)")
         {
             (code, data) -> () in
                 
@@ -65,7 +65,7 @@ public final class Server
     /** Returns a tuple with urls associated with a Channel ID's: Official Name and Thumbnail */
     class func channelData (ID:String, _ response:(String, String)->())
     {
-        Network.GET("https://custom_backend.com/chInfo?c=\(ID)")
+        Network.GET("https://custom_backend_test.com/chInfo?c=\(ID)")
         {
             (code, data) -> () in
             
@@ -98,7 +98,7 @@ public final class Server
     class func videoID (url:String) -> String { return url.componentsSeparatedByString("v=").last! }
 }
 
-private final class Network
+final class Network
 {
     class func GET (url: String, _ response:(Int?, NSData?)->())
     {

@@ -192,16 +192,18 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
     {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! UICard
         
-        NSURLSession.sharedSession().dataTaskWithURL(NSURL(string: videoArray[indexPath.row].thumbnail)!)
+        Network.GET(videoArray[indexPath.row].thumbnail)
+        {
+            (code, data) in
+            
+            if data != nil
             {
-                (data, res, err) -> Void in
-                
                 dispatch_async(dispatch_get_main_queue())
-                    {
-                        cell.image.image = UIImage(data: data!)
+                {
+                    cell.image.image = UIImage(data: data!)
                 }
-                
-            }.resume()
+            }
+        }
         
         cell.name.text = videoArray[indexPath.row].title
         cell.time.text = videoArray[indexPath.row].time
@@ -242,16 +244,16 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator)
     {
-        coordinator.animateAlongsideTransition ( //add guard here
-        {
-            (a) -> Void in
-            
-            if (self.videoArray.count != 0)
+        coordinator.animateAlongsideTransition(
             {
-                self.collectionView.performBatchUpdates(nil, completion: nil)
-            }
+                context -> Void in
                 
-        }, completion: nil)
+                if self.videoArray.count != 0
+                {
+                    self.collectionView.performBatchUpdates(nil, completion: nil)
+                }
+                
+            }, completion: nil)
     }
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle { return UIStatusBarStyle.LightContent }

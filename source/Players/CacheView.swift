@@ -151,11 +151,11 @@ final class CacheView: UIViewController, UICollectionViewDataSource, UICollectio
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator)
     {
-        coordinator.animateAlongsideTransition ( //add guard here
+        coordinator.animateAlongsideTransition(
             {
-                (a) -> Void in
+                context -> Void in
                 
-                if (self.videoArray.count != 0)
+                if self.videoArray.count != 0
                 {
                     self.collectionView.performBatchUpdates(nil, completion: nil)
                 }
