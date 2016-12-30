@@ -2,7 +2,7 @@
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/nextseto/Verilog-Projects/master/LICENSE)
 
-Players is an iOS application written in Swift that communicates with a custom backend [ytn-cloud]() to get video information and metadata from Youtube.
+Players is an iOS application written in Swift that communicates with a custom backend ytn-cloud to get video information and metadata from Youtube.
 
 ## Purpose
 
