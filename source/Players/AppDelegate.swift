@@ -10,7 +10,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
 {
     var window: UIWindow?
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool
     {
         window?.tintColor = UIColor(red: 202/255.0, green: 90/255.0, blue: 94/255.0, alpha: 1)
         
@@ -83,52 +83,52 @@ class AppDelegate: UIResponder, UIApplicationDelegate
          */
         
          
-        LocalStore.setDictionary("subs", dict: standardDict)
+        LocalStore.setDictionary("subs", dict: standardDict as NSDictionary)
         
         return true
     }
 
-    func applicationWillResignActive(application: UIApplication)
+    func applicationWillResignActive(_ application: UIApplication)
     {
     }
 
-    func applicationDidEnterBackground(application: UIApplication)
+    func applicationDidEnterBackground(_ application: UIApplication)
     {
-        NSNotificationCenter.defaultCenter().postNotificationName("PlayVideo", object: nil)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "PlayVideo"), object: nil)
     }
 
-    func applicationWillEnterForeground(application: UIApplication)
+    func applicationWillEnterForeground(_ application: UIApplication)
     {
-        NSNotificationCenter.defaultCenter().postNotificationName("PlayVideo", object: nil)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "PlayVideo"), object: nil)
     }
 
-    func applicationDidBecomeActive(application: UIApplication)
+    func applicationDidBecomeActive(_ application: UIApplication)
     {
     }
 
-    func applicationWillTerminate(application: UIApplication)
+    func applicationWillTerminate(_ application: UIApplication)
     {
     }
 }
 
 struct Video
 {
-    let title:String
-    let thumbnail:String
-    let time:String
-    let views:String
-    let url:String
-    let channelName:String
-    let channelID:String
+    let title:String,
+        thumbnail:String,
+        time:String,
+        views:String,
+        url:String,
+        channelName:String,
+        channelID:String
 }
 
-func showLabel (text:String, viewController:UIViewController)
+func showLabel (_ text:String, viewController:UIViewController)
 {
     let label = UILabel(frame: CGRect(origin: CGPoint(x: viewController.view.frame.width/2 - 40, y: viewController.view.frame.height/4), size: CGSize(width: 150, height: 100)))
     label.text = text
     label.alpha = 1
     viewController.view.addSubview(label)
-    UIView.animateWithDuration(5, animations: { label.alpha = 0 }) { (flag) -> Void in label.removeFromSuperview() }
+    UIView.animate(withDuration: 5, animations: { label.alpha = 0 }, completion: { (flag) -> Void in label.removeFromSuperview() }) 
 }
 
 

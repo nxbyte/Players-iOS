@@ -4,11 +4,11 @@
 
 import UIKit
 
-final class SearchView: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate
+final class SearchView: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate
 {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var searchField: UITextField!
-    let spinner = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+    let spinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     
     var videoArray:[Video] = [], getMoreFlag = true, query:String?
     
@@ -18,7 +18,7 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
 
         searchField.delegate = self
         
-        spinner.color = UIColor.grayColor()
+        spinner.color = UIColor.gray
         view.addSubview(spinner)
         
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(SearchView.longPress(_:)))
@@ -29,7 +29,7 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
         collectionView.delaysContentTouches = false
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
         textField.resignFirstResponder()
         
@@ -56,12 +56,12 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
             
             self.videoArray = videos
             
-            dispatch_async(dispatch_get_main_queue())
+            DispatchQueue.main.async
             {
                 self.spinner.stopAnimating()
                 
                 if (self.videoArray.isEmpty) { showLabel("No Results", viewController: self) }
-                else { self.collectionView.reloadSections(NSIndexSet(index: 0)) }
+                else { self.collectionView.reloadSections(IndexSet(integer: 0)) }
             }
         }
         
@@ -71,7 +71,7 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
         return true
     }
     
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView)
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView)
     {
         if (getMoreFlag) // Limited to 50 because of server cannot get more than 50 videos per page... 'videoArray.count == 25'
         {
@@ -85,16 +85,16 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
                 
                     self.videoArray += videos
                 
-                    dispatch_async(dispatch_get_main_queue())
+                    DispatchQueue.main.async
                     {
-                        self.collectionView.reloadSections(NSIndexSet(index: 0))
+                        self.collectionView.reloadSections(IndexSet(integer: 0))
                     }
                 }
             }
         }
     }
     
-    func downloadVideo(video:Video, quaility:Int)
+    func downloadVideo(_ video:Video, quaility:Int)
     {
         Server.videoURL(video.url, quaility)
             {
@@ -110,7 +110,7 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
                             
                             if (r.ok)
                             {
-                                r.content?.writeToFile("\(NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, .UserDomainMask, true).first!)/\(videoID).jpg", atomically: true)
+                                try? r.content?.write(to: URL(fileURLWithPath: "\(NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, .userDomainMask, true).first!)/\(videoID).jpg"), options: [.atomic])
                             }
                     }
                     
@@ -122,57 +122,57 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
                             
                             if (r.ok)
                             {
-                                r.content?.writeToFile("\(NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, .UserDomainMask, true).first!)/\(videoID).mp4", atomically: true)
+                                try? r.content?.write(to: URL(fileURLWithPath: "\(NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, .userDomainMask, true).first!)/\(videoID).mp4"), options: [.atomic])
                             }
                     }
                 }
         }
     }
     
-    func longPress(gesture:UILongPressGestureRecognizer)
+    func longPress(_ gesture:UILongPressGestureRecognizer)
     {
-        if (gesture.state != UIGestureRecognizerState.Began) { return }
+        if (gesture.state != UIGestureRecognizerState.began) { return }
         
-        let tapPoint = gesture.locationInView(collectionView)
+        let tapPoint = gesture.location(in: collectionView)
         
-        if (collectionView.indexPathForItemAtPoint(tapPoint) == nil) { return }
+        if (collectionView.indexPathForItem(at: tapPoint) == nil) { return }
         
-        let cachePopup = UIAlertController(title: "Options", message: "", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let cachePopup = UIAlertController(title: "Options", message: "", preferredStyle: UIAlertControllerStyle.actionSheet)
         
-        cachePopup.addAction(UIAlertAction(title: "Download SD", style: UIAlertActionStyle.Default)
+        cachePopup.addAction(UIAlertAction(title: "Download SD", style: UIAlertActionStyle.default)
             {
                 alert in
-                self.downloadVideo(self.videoArray[self.collectionView.indexPathForItemAtPoint(tapPoint)!.row], quaility: 360)
+                self.downloadVideo(self.videoArray[self.collectionView.indexPathForItem(at: tapPoint)!.row], quaility: 360)
             })
         
-        cachePopup.addAction(UIAlertAction(title: "Download HD", style: UIAlertActionStyle.Default)
+        cachePopup.addAction(UIAlertAction(title: "Download HD", style: UIAlertActionStyle.default)
             {
                 alert in
-                self.downloadVideo(self.videoArray[self.collectionView.indexPathForItemAtPoint(tapPoint)!.row], quaility: 720)
+                self.downloadVideo(self.videoArray[self.collectionView.indexPathForItem(at: tapPoint)!.row], quaility: 720)
             })
         
-        cachePopup.addAction(UIAlertAction(title: "Share Video", style: UIAlertActionStyle.Default)
+        cachePopup.addAction(UIAlertAction(title: "Share Video", style: UIAlertActionStyle.default)
             {
                 alert in
                 
-                let videoInfo = self.videoArray[self.collectionView.indexPathForItemAtPoint(tapPoint)!.row]
+                let videoInfo = self.videoArray[self.collectionView.indexPathForItem(at: tapPoint)!.row]
                 
-                let shareSheet = UIActivityViewController(activityItems: ["Take a look:\n", videoInfo.title + "\n", NSURL(string:"https://youtu.be/\(Server.videoID(videoInfo.url))")!], applicationActivities: nil)
+                let shareSheet = UIActivityViewController(activityItems: ["Take a look:\n", videoInfo.title + "\n", URL(string:"https://youtu.be/\(Server.videoID(videoInfo.url))")!], applicationActivities: nil)
                 
                 shareSheet.popoverPresentationController?.sourceView = self.collectionView
                 shareSheet.popoverPresentationController?.sourceRect = CGRect(x: tapPoint.x, y: tapPoint.y, width: 1.0, height: 1.0)
                 
-                self.navigationController?.presentViewController(shareSheet, animated: true, completion: nil)
+                self.navigationController?.present(shareSheet, animated: true, completion: nil)
             })
         
-        cachePopup.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        cachePopup.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
         
         cachePopup.popoverPresentationController?.sourceView = collectionView
         cachePopup.popoverPresentationController?.sourceRect = CGRect(x: tapPoint.x, y: tapPoint.y, width: 1.0, height: 1.0)
-        presentViewController(cachePopup, animated: true, completion: nil)
+        present(cachePopup, animated: true, completion: nil)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
         Server.videoURL(videoArray[indexPath.row].url, 360)
             {
@@ -180,17 +180,17 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
                 
                 if (!videoURL.isEmpty)
                 {
-                    dispatch_async(dispatch_get_main_queue())
+                    DispatchQueue.main.async
                         {
-                            self.presentViewController(VideoView(url: videoURL), animated: true, completion: nil)
+                            self.present(VideoView(url: videoURL), animated: true, completion: nil)
                     }
                 }
         }
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! UICard
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! UICard
         
         Network.GET(videoArray[indexPath.row].thumbnail)
         {
@@ -198,7 +198,7 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
             
             if data != nil
             {
-                dispatch_async(dispatch_get_main_queue())
+                DispatchQueue.main.async
                 {
                     cell.image.image = UIImage(data: data!)
                 }
@@ -207,7 +207,7 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
         
         cell.name.text = videoArray[indexPath.row].title
         cell.time.text = videoArray[indexPath.row].time
-        cell.time.backgroundColor = cell.time.backgroundColor!.colorWithAlphaComponent(0.5)
+        cell.time.backgroundColor = cell.time.backgroundColor!.withAlphaComponent(0.5)
         cell.account.text = videoArray[indexPath.row].channelName
         cell.views.text = videoArray[indexPath.row].views
         
@@ -215,37 +215,37 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, didHighlightItemAtIndexPath indexPath: NSIndexPath)
+    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath)
     {
-        (collectionView.cellForItemAtIndexPath(indexPath) as! UICard).backgroundColor = UIColor(red: 0.82, green: 0.82, blue: 0.82, alpha: 1)
+        (collectionView.cellForItem(at: indexPath) as! UICard).backgroundColor = UIColor(red: 0.82, green: 0.82, blue: 0.82, alpha: 1)
     }
     
-    func collectionView(collectionView: UICollectionView, didUnhighlightItemAtIndexPath indexPath: NSIndexPath)
+    func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath)
     {
-        (collectionView.cellForItemAtIndexPath(indexPath) as! UICard).backgroundColor = UIColor.whiteColor()
+        (collectionView.cellForItem(at: indexPath) as! UICard).backgroundColor = UIColor.white
     }
 
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize
     {
         //Default iPad Dimensions
-        var size = CGSizeMake(310, 90)
+        var size = CGSize(width: 310, height: 90)
         
         //Change to iPhone Dimensions
-        if (UIDevice.currentDevice().userInterfaceIdiom == UIUserInterfaceIdiom.Phone)
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone)
         {
             //height = CGFloat(90)
-            size.width = (UIScreen.mainScreen().bounds.width - 10)
+            size.width = (UIScreen.main.bounds.width - 10)
         }
         
         return size
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return videoArray.count }
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return videoArray.count }
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator)
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
     {
-        coordinator.animateAlongsideTransition(
-            {
+        coordinator.animate(
+            alongsideTransition: {
                 context -> Void in
                 
                 if self.videoArray.count != 0
@@ -256,7 +256,7 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
             }, completion: nil)
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle { return UIStatusBarStyle.LightContent }
+    override var preferredStatusBarStyle : UIStatusBarStyle { return UIStatusBarStyle.lightContent }
     
     override func didReceiveMemoryWarning() { super.didReceiveMemoryWarning() }
 }

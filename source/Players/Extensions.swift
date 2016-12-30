@@ -8,80 +8,80 @@ import Foundation
 public final class LocalStore
 {
     /** (Required) Sets up a local store key for use. Use this in AppDelegate */
-    class func prepare(storeKey:String)
+    class func prepare(_ storeKey:String)
     {
-        if (NSUserDefaults.standardUserDefaults().objectForKey(storeKey) == nil)
+        if (UserDefaults.standard.object(forKey: storeKey) == nil)
         {
-            NSUserDefaults.standardUserDefaults().setObject(NSMutableDictionary(), forKey: storeKey)
+            UserDefaults.standard.set(NSMutableDictionary(), forKey: storeKey)
         }
     }
     
     /** Sets a string to the local store */
-    class func set(storeKey:String, dictKey:String, dictValue:String)
+    class func set(_ storeKey:String, dictKey:String, dictValue:String)
     {
-        let temp = (NSUserDefaults.standardUserDefaults().objectForKey(storeKey)?.mutableCopy()) as! NSMutableDictionary
-        temp.setValue(dictValue, forKey: dictKey)
-        NSUserDefaults.standardUserDefaults().setObject(temp, forKey: storeKey)
+        var temp = UserDefaults.standard.object(forKey: storeKey) as! Dictionary<String, String>
+        temp[dictKey] = dictValue
+        UserDefaults.standard.set(temp, forKey: storeKey)
     }
     
     /** Sets a NSDictionary object to local store */
-    class func setDictionary(storeKey:String, dict:NSDictionary)
+    class func setDictionary(_ storeKey:String, dict:NSDictionary)
     {
-        NSUserDefaults.standardUserDefaults().setObject(dict, forKey: storeKey)
+        UserDefaults.standard.set(dict, forKey: storeKey)
     }
     
     /** Removes a value from the local store */
-    class func remove(storeKey:String, dictKey:String)
+    class func remove(_ storeKey:String, dictKey:String)
     {
-        let temp = (NSUserDefaults.standardUserDefaults().objectForKey(storeKey)?.mutableCopy()) as! NSMutableDictionary
-        temp.removeObjectForKey(dictKey)
-        NSUserDefaults.standardUserDefaults().setObject(temp, forKey: storeKey)
+        var temp = UserDefaults.standard.object(forKey: storeKey) as! Dictionary<String, String>
+        temp.removeValue(forKey: dictKey)
+        UserDefaults.standard.set(temp, forKey: storeKey)
     }
     
     /** Removes a local store key; after deleting the data is unrecoverable */
-    class func purge(storeKey:String)
+    class func purge(_ storeKey:String)
     {
-        NSUserDefaults.standardUserDefaults().removeObjectForKey(storeKey)
+        UserDefaults.standard.removeObject(forKey: storeKey)
     }
     
     /** Returns an array of String keys from local store */
-    class func keys(storeKey:String) -> [String]
+    class func keys(_ storeKey:String) -> [String]
     {
-        return NSUserDefaults.standardUserDefaults().objectForKey(storeKey)?.allKeys as! [String]
+        return (UserDefaults.standard.object(forKey: storeKey) as AnyObject).allKeys as! [String]
     }
     
     /** Returns an array of String values from local store */
-    class func values(storeKey:String) -> [String]
+    class func values(_ storeKey:String) -> [String]
     {
-        return NSUserDefaults.standardUserDefaults().objectForKey(storeKey)?.allValues as! [String]
+        return (UserDefaults.standard.object(forKey: storeKey) as AnyObject).allValues as! [String]
     }
     
     /** Returns a NSDictionary object from local store */
-    class func getDictionary(storeKey:String) -> NSDictionary
+    class func getDictionary(_ storeKey:String) -> NSDictionary
     {
-        return NSUserDefaults.standardUserDefaults().objectForKey(storeKey) as! NSDictionary
+        return UserDefaults.standard.object(forKey: storeKey) as! NSDictionary
     }
     
     /** Returns an Int for the length of the associated local store key */
-    class func count(storeKey:String) -> Int
+    class func count(_ storeKey:String) -> Int
     {
-        return NSUserDefaults.standardUserDefaults().objectForKey(storeKey)!.allKeys.count
+        return (UserDefaults.standard.object(forKey: storeKey)! as AnyObject).allKeys.count
     }
 }
 
 public final class FileSystem
 {
     /** Saves an NSData object to a directory with a given file name */
-    class func saveFile(data:NSData, folder:NSSearchPathDirectory, fileName:String)
+    class func saveFile(_ data:Data, folder:FileManager.SearchPathDirectory, fileName:String)
     {
-        data.writeToFile("\(NSSearchPathForDirectoriesInDomains(folder, .UserDomainMask, true).first!)/\(fileName)", atomically: true)
+        try? data.write(to: URL(fileURLWithPath: "\(NSSearchPathForDirectoriesInDomains(folder, .userDomainMask, true).first!)/\(fileName)"), options: [.atomic])
     }
 
     /** Removes a file from a directory; after deleting the data is unrecoverable */
-    class func deleteFile(folder:NSSearchPathDirectory, fileName:String)
+    class func deleteFile(_ folder:FileManager.SearchPathDirectory, fileName:String)
     {
         do{
-            return try NSFileManager.defaultManager().removeItemAtPath("\(NSSearchPathForDirectoriesInDomains(folder, .UserDomainMask, true).first!)/\(fileName)")
+            return try FileManager.default.removeItem(atPath: "\(NSSearchPathForDirectoriesInDomains(folder, .userDomainMask, true).first!)/\(fileName)")
         }
         
         catch
@@ -91,28 +91,28 @@ public final class FileSystem
     }
     
     /** Returns an NSData object with a given directory and file name */
-    class func getFile(folder:NSSearchPathDirectory, fileName:String) -> NSData?
+    class func getFile(_ folder:FileManager.SearchPathDirectory, fileName:String) -> Data?
     {
-        return NSData(contentsOfFile: "\(NSSearchPathForDirectoriesInDomains(folder, .UserDomainMask, true).first!)/\(fileName)")
+        return (try? Data(contentsOf: URL(fileURLWithPath: "\(NSSearchPathForDirectoriesInDomains(folder, .userDomainMask, true).first!)/\(fileName)")))
     }
     
     /** Returns a String with the complete path from a given directory and file name */
-    class func getPath(folder:NSSearchPathDirectory, fileName:String) -> String
+    class func getPath(_ folder:FileManager.SearchPathDirectory, fileName:String) -> String
     {
-        return "\(NSSearchPathForDirectoriesInDomains(folder, .UserDomainMask, true).first!)/\(fileName)"
+        return "\(NSSearchPathForDirectoriesInDomains(folder, .userDomainMask, true).first!)/\(fileName)"
     }
     
     /** Returns a NSURL Object with the complete url from a given directory and file name. Includes the prefix file:// */
-    class func getPath(folder:NSSearchPathDirectory, fileName:String) -> NSURL?
+    class func getPath(_ folder:FileManager.SearchPathDirectory, fileName:String) -> URL?
     {
-        return NSURL(fileURLWithPath:"\(NSSearchPathForDirectoriesInDomains(folder, .UserDomainMask, true).first!)/\(fileName)")
+        return URL(fileURLWithPath:"\(NSSearchPathForDirectoriesInDomains(folder, .userDomainMask, true).first!)/\(fileName)")
     }
     
     /** Returns an array of Strings with the name of the files from a general directory */
-    class func listDirectory(folder:NSSearchPathDirectory) -> [String]
+    class func listDirectory(_ folder:FileManager.SearchPathDirectory) -> [String]
     {
         do{
-            return try NSFileManager.defaultManager().contentsOfDirectoryAtPath("\(NSSearchPathForDirectoriesInDomains(folder, .UserDomainMask, true).first!)") 
+            return try FileManager.default.contentsOfDirectory(atPath: "\(NSSearchPathForDirectoriesInDomains(folder, .userDomainMask, true).first!)") 
         }
         
         catch
@@ -123,10 +123,10 @@ public final class FileSystem
     }
     
     /** Returns an array of Strings with the name of the files from a specified directory */
-    class func listDirectory(folder:NSSearchPathDirectory, subFolder:String) -> [String]
+    class func listDirectory(_ folder:FileManager.SearchPathDirectory, subFolder:String) -> [String]
     {
         do{
-            return try NSFileManager.defaultManager().contentsOfDirectoryAtPath("\(NSSearchPathForDirectoriesInDomains(folder, .UserDomainMask, true).first!)/\(subFolder)")
+            return try FileManager.default.contentsOfDirectory(atPath: "\(NSSearchPathForDirectoriesInDomains(folder, .userDomainMask, true).first!)/\(subFolder)")
         }
         
         catch
@@ -137,11 +137,11 @@ public final class FileSystem
     }
     
     /** Returns a double that is associated with the size of a given file in a specified directory */
-    class func fileSize(folder:NSSearchPathDirectory, fileName:String) -> Double
+    class func fileSize(_ folder:FileManager.SearchPathDirectory, fileName:String) -> Double
     {
         do
         {
-            return Double((try NSFileManager.defaultManager().attributesOfItemAtPath("\(NSSearchPathForDirectoriesInDomains(folder, .UserDomainMask, true).first!)/\(fileName)") as NSDictionary!).objectForKey(NSFileSize) as! Int!) / 1000000.0
+            return Double((try FileManager.default.attributesOfItem(atPath: "\(NSSearchPathForDirectoriesInDomains(folder, .userDomainMask, true).first!)/\(fileName)") as NSDictionary!).object(forKey: FileAttributeKey.size) as! Int!) / 1000000.0
         }
         
         catch
@@ -151,9 +151,9 @@ public final class FileSystem
     }
     
     /** Returns a Boolean value that indicates whether a file or directory exists at a specified path. */
-    class func fileExist(path:String) -> Bool
+    class func fileExist(_ path:String) -> Bool
     {
-        return NSFileManager.defaultManager().fileExistsAtPath(path)
+        return FileManager.default.fileExists(atPath: path)
     }
 }
 

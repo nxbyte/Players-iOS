@@ -14,64 +14,64 @@ final class VideoView : AVPlayerViewController
     {
         super.init(nibName: "", bundle: nil)
         
-        player = AVPlayer(URL: NSURL(string: url)!)
+        player = AVPlayer(url: URL(string: url)!)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(VideoView.playerDidFinishPlaying(_:)), name: AVPlayerItemDidPlayToEndTimeNotification, object: player!.currentItem)
+        NotificationCenter.default.addObserver(self, selector: #selector(VideoView.playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player!.currentItem)
     }
     
     /** Initializes an instance of a VideoView with a given NSURL */
-    init(URL:NSURL)
+    init(URL:Foundation.URL)
     {
         super.init(nibName: "", bundle: nil)
 
-        player = AVPlayer(URL: URL)
+        player = AVPlayer(url: URL)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(VideoView.playerDidFinishPlaying(_:)), name: AVPlayerItemDidPlayToEndTimeNotification, object: player!.currentItem)
+        NotificationCenter.default.addObserver(self, selector: #selector(VideoView.playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player!.currentItem)
     }
     
     override func viewDidLoad()
     {
         player!.play()
         
-        UIApplication.sharedApplication().beginReceivingRemoteControlEvents()
+        UIApplication.shared.beginReceivingRemoteControlEvents()
         
         //MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = [MPMediaItemPropertyArtist : "Artist Name",  MPMediaItemPropertyTitle : "Video Title"] //(A Bug)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(VideoView.play), name: "PlayVideo", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(VideoView.play), name: NSNotification.Name(rawValue: "PlayVideo"), object: nil)
     }
     
-    func playerDidFinishPlaying(notify:NSNotification)
+    func playerDidFinishPlaying(_ notify:Notification)
     {
-        self.dismissViewControllerAnimated(true, completion:
+        self.dismiss(animated: true, completion:
         {
-            NSNotificationCenter.defaultCenter().removeObserver(self)
-            UIApplication.sharedApplication().endReceivingRemoteControlEvents()
+            NotificationCenter.default.removeObserver(self)
+            UIApplication.shared.endReceivingRemoteControlEvents()
         })
     }
     
     func play()
     {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(NSEC_PER_SEC))), dispatch_get_main_queue(),
-        {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC),
+        execute: {
              self.player!.play()
         })
     }
     
-    override func remoteControlReceivedWithEvent(event: UIEvent?)
+    override func remoteControlReceived(with event: UIEvent?)
     {
         switch (event!.subtype)
         {
-            case .RemoteControlPause:
+            case .remoteControlPause:
                 player!.pause()
                 break
-            case .RemoteControlPlay:
+            case .remoteControlPlay:
                 player!.play()
                 break
-            case .RemoteControlNextTrack:
-                player!.seekToTime(CMTimeAdd(player!.currentTime(), CMTimeMakeWithSeconds(15, 1)))
+            case .remoteControlNextTrack:
+                player!.seek(to: CMTimeAdd(player!.currentTime(), CMTimeMakeWithSeconds(15, 1)))
                 break
-            case .RemoteControlPreviousTrack:
-                player!.seekToTime(CMTimeSubtract(player!.currentTime(), CMTimeMakeWithSeconds(15, 1)))
+            case .remoteControlPreviousTrack:
+                player!.seek(to: CMTimeSubtract(player!.currentTime(), CMTimeMakeWithSeconds(15, 1)))
                 break
             default:
                 break

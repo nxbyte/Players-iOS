@@ -11,7 +11,7 @@ final class CacheView: UIViewController, UICollectionViewDataSource, UICollectio
     
     var videoArray:[Video] = []
     
-    var isDownloading = NSTimer()
+    var isDownloading = Timer()
     
     override func viewDidLoad()
     {
@@ -25,7 +25,7 @@ final class CacheView: UIViewController, UICollectionViewDataSource, UICollectio
         collectionView.delaysContentTouches = false
     }
     
-    override func viewWillAppear(animated: Bool)
+    override func viewWillAppear(_ animated: Bool)
     {
         if (videoArray.count != LocalStore.count("cache")) { loadCache() }
     }
@@ -43,7 +43,7 @@ final class CacheView: UIViewController, UICollectionViewDataSource, UICollectio
         
         for element in LocalStore.values("cache")
         {
-            temp = element.componentsSeparatedByString("///:///")
+            temp = element.components(separatedBy: "///:///")
     
             newArray.append(Video(title:temp[0], thumbnail:"\(temp[1]).jpg", time: "", views:temp[2], url: "\(temp[1]).mp4", channelName:temp[3], channelID:temp[1]))
         }
@@ -52,62 +52,62 @@ final class CacheView: UIViewController, UICollectionViewDataSource, UICollectio
         collectionView.reloadData()
     }
 
-    func longPress(gesture:UILongPressGestureRecognizer)
+    func longPress(_ gesture:UILongPressGestureRecognizer)
     {
-        if (gesture.state != UIGestureRecognizerState.Began) { return }
+        if (gesture.state != UIGestureRecognizerState.began) { return }
         
-        let tapPoint = gesture.locationInView(collectionView)
+        let tapPoint = gesture.location(in: collectionView)
         
-        if (collectionView.indexPathForItemAtPoint(tapPoint) == nil) { return }
+        if (collectionView.indexPathForItem(at: tapPoint) == nil) { return }
         
-        let popup = UIAlertController(title: "Options", message: "", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let popup = UIAlertController(title: "Options", message: "", preferredStyle: UIAlertControllerStyle.actionSheet)
         
-        popup.addAction(UIAlertAction(title: "Save to Photos", style: UIAlertActionStyle.Default)
+        popup.addAction(UIAlertAction(title: "Save to Photos", style: UIAlertActionStyle.default)
         {
             alert in
                 
-            let cell = self.videoArray[self.collectionView.indexPathForItemAtPoint(tapPoint)!.row].url
+            let cell = self.videoArray[self.collectionView.indexPathForItem(at: tapPoint)!.row].url
             
-            UISaveVideoAtPathToSavedPhotosAlbum(FileSystem.getPath(.DocumentDirectory, fileName: cell), nil, nil, nil)
+            UISaveVideoAtPathToSavedPhotosAlbum(FileSystem.getPath(.documentDirectory, fileName: cell), nil, nil, nil)
         })
         
-        popup.addAction(UIAlertAction(title: "Delete", style: UIAlertActionStyle.Destructive)
+        popup.addAction(UIAlertAction(title: "Delete", style: UIAlertActionStyle.destructive)
         {
             alert in
             
-            let index = self.collectionView.indexPathForItemAtPoint(tapPoint)!.row
+            let index = self.collectionView.indexPathForItem(at: tapPoint)!.row
             
-            FileSystem.deleteFile(.DocumentDirectory, fileName: self.videoArray[index].url)
-            FileSystem.deleteFile(.DocumentDirectory, fileName: self.videoArray[index].thumbnail)
+            FileSystem.deleteFile(.documentDirectory, fileName: self.videoArray[index].url)
+            FileSystem.deleteFile(.documentDirectory, fileName: self.videoArray[index].thumbnail)
             
             LocalStore.remove("cache", dictKey: self.videoArray[index].channelID)
             
-            self.videoArray.removeAtIndex(index)
+            self.videoArray.remove(at: index)
             self.collectionView.reloadData()
         })
         
-        popup.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        popup.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
         
         popup.popoverPresentationController?.sourceView = collectionView
-        popup.popoverPresentationController?.sourceRect = CGRectMake(tapPoint.x, tapPoint.y, 1.0, 1.0)
-        presentViewController(popup, animated: true, completion: nil)
+        popup.popoverPresentationController?.sourceRect = CGRect(x: tapPoint.x, y: tapPoint.y, width: 1.0, height: 1.0)
+        present(popup, animated: true, completion: nil)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
-        let path = FileSystem.getPath(.DocumentDirectory, fileName: videoArray[indexPath.row].url)!
+        let path = FileSystem.getPath(.documentDirectory, fileName: videoArray[indexPath.row].url)!
         
-        if (FileSystem.fileExist(path.path!))
+        if (FileSystem.fileExist(path.path))
         {
-            presentViewController(VideoView(URL: path), animated: true, completion: nil)
+            present(VideoView(URL: path), animated: true, completion: nil)
         }
     }
 
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! UICard
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! UICard
         
-        if let thumbData = FileSystem.getFile(.DocumentDirectory, fileName: videoArray[indexPath.row].thumbnail)
+        if let thumbData = FileSystem.getFile(.documentDirectory, fileName: videoArray[indexPath.row].thumbnail)
         {
             cell.image.image = UIImage(data: thumbData)
         }
@@ -115,44 +115,44 @@ final class CacheView: UIViewController, UICollectionViewDataSource, UICollectio
         cell.name.text = videoArray[indexPath.row].title
         cell.account.text = videoArray[indexPath.row].channelName
         cell.time.text = videoArray[indexPath.row].views
-        cell.time.backgroundColor = cell.time.backgroundColor!.colorWithAlphaComponent(0.5)
+        cell.time.backgroundColor = cell.time.backgroundColor!.withAlphaComponent(0.5)
         cell.views.text = "100 MB"
         
         cell.contentView.frame = cell.bounds
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, didHighlightItemAtIndexPath indexPath: NSIndexPath)
+    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath)
     {
-        (collectionView.cellForItemAtIndexPath(indexPath) as! UICard).backgroundColor = UIColor(red: 0.82, green: 0.82, blue: 0.82, alpha: 1)
+        (collectionView.cellForItem(at: indexPath) as! UICard).backgroundColor = UIColor(red: 0.82, green: 0.82, blue: 0.82, alpha: 1)
     }
     
-    func collectionView(collectionView: UICollectionView, didUnhighlightItemAtIndexPath indexPath: NSIndexPath)
+    func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath)
     {
-        (collectionView.cellForItemAtIndexPath(indexPath) as! UICard).backgroundColor = UIColor.whiteColor()
+        (collectionView.cellForItem(at: indexPath) as! UICard).backgroundColor = UIColor.white
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize
     {
         //Default iPad Dimensions
-        var size = CGSizeMake(310, 90)
+        var size = CGSize(width: 310, height: 90)
         
         //Change to iPhone Dimensions
-        if (UIDevice.currentDevice().userInterfaceIdiom == UIUserInterfaceIdiom.Phone)
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone)
         {
             //height = CGFloat(90)
-            size.width = (UIScreen.mainScreen().bounds.width - 10)
+            size.width = (UIScreen.main.bounds.width - 10)
         }
         
         return size
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return videoArray.count }
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return videoArray.count }
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator)
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
     {
-        coordinator.animateAlongsideTransition(
-            {
+        coordinator.animate(
+            alongsideTransition: {
                 context -> Void in
                 
                 if self.videoArray.count != 0
@@ -163,7 +163,7 @@ final class CacheView: UIViewController, UICollectionViewDataSource, UICollectio
             }, completion: nil)
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle { return UIStatusBarStyle.LightContent }
+    override var preferredStatusBarStyle : UIStatusBarStyle { return UIStatusBarStyle.lightContent }
     
     override func didReceiveMemoryWarning() { super.didReceiveMemoryWarning() }
 }

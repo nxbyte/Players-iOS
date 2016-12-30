@@ -9,7 +9,7 @@ final class ChannelView: UIViewController, UICollectionViewDataSource, UICollect
     var channelArray:[Channel] = []
     @IBOutlet weak var collectionView: UICollectionView!
 
-    let cache:NSCache = NSCache()
+    let cache:NSCache<NSString, UIImage> = NSCache()
     
     override func viewDidLoad()
     {
@@ -31,7 +31,7 @@ final class ChannelView: UIViewController, UICollectionViewDataSource, UICollect
         {
             channelArray.append(Channel(name: "\(name)", ID: "\(id)"))
             
-            if (FileSystem.getFile(NSSearchPathDirectory.LibraryDirectory, fileName: "\(id).jpg") == nil)
+            if (FileSystem.getFile(FileManager.SearchPathDirectory.libraryDirectory, fileName: "\(id).jpg") == nil)
             {
                 Server.channelData("\(id)",
                     {
@@ -43,7 +43,7 @@ final class ChannelView: UIViewController, UICollectionViewDataSource, UICollect
                                 
                                 if (r.ok)
                                 {
-                                    r.content?.writeToFile("\(NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.LibraryDirectory, .UserDomainMask, true).first!)/\(id).jpg", atomically: true)
+                                    try? r.content?.write(to: URL(fileURLWithPath: "\(NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.libraryDirectory, .userDomainMask, true).first!)/\(id).jpg"), options: [.atomic])
                                 }
                         }
                 })
@@ -51,69 +51,69 @@ final class ChannelView: UIViewController, UICollectionViewDataSource, UICollect
         }
     }
     
-    @IBAction func closeButton(sender: AnyObject)
+    @IBAction func closeButton(_ sender: AnyObject)
     {
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
-    func longPress(gesture:UILongPressGestureRecognizer)
+    func longPress(_ gesture:UILongPressGestureRecognizer)
     {
-        if (gesture.state != UIGestureRecognizerState.Began) { return }
+        if (gesture.state != UIGestureRecognizerState.began) { return }
         
-        let tapPoint = gesture.locationInView(collectionView)
+        let tapPoint = gesture.location(in: collectionView)
         
-        if (collectionView.indexPathForItemAtPoint(tapPoint) == nil) { return }
+        if (collectionView.indexPathForItem(at: tapPoint) == nil) { return }
         
-        let popup = UIAlertController(title: "Options for \(self.channelArray[self.collectionView.indexPathForItemAtPoint(tapPoint)!.row].name)", message: "", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let popup = UIAlertController(title: "Options for \(self.channelArray[self.collectionView.indexPathForItem(at: tapPoint)!.row].name)", message: "", preferredStyle: UIAlertControllerStyle.actionSheet)
         
-        popup.addAction(UIAlertAction(title: "Unsubscribe", style: UIAlertActionStyle.Destructive)
+        popup.addAction(UIAlertAction(title: "Unsubscribe", style: UIAlertActionStyle.destructive)
             {
                 alert in
                 
-                let cell = self.channelArray[self.collectionView.indexPathForItemAtPoint(tapPoint)!.row].ID
+                let cell = self.channelArray[self.collectionView.indexPathForItem(at: tapPoint)!.row].ID
                 
-                self.channelArray.removeAtIndex(self.collectionView.indexPathForItemAtPoint(tapPoint)!.row)
-                self.collectionView.reloadSections(NSIndexSet(index: 0))
+                self.channelArray.remove(at: self.collectionView.indexPathForItem(at: tapPoint)!.row)
+                self.collectionView.reloadSections(IndexSet(integer: 0))
                 
-                FileSystem.deleteFile(.LibraryDirectory, fileName: "\(cell).jpg")
+                FileSystem.deleteFile(.libraryDirectory, fileName: "\(cell).jpg")
                 LocalStore.remove("subs", dictKey: cell)
             })
         
-        popup.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        popup.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
         
         popup.popoverPresentationController?.sourceView = collectionView
-        popup.popoverPresentationController?.sourceRect = CGRectMake(tapPoint.x, tapPoint.y, 1.0, 1.0)
-        presentViewController(popup, animated: true, completion: nil)
+        popup.popoverPresentationController?.sourceRect = CGRect(x: tapPoint.x, y: tapPoint.y, width: 1.0, height: 1.0)
+        present(popup, animated: true, completion: nil)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
-        NSNotificationCenter.defaultCenter().postNotificationName("loadChannel", object: nil, userInfo: ["ID": channelArray[indexPath.row].ID])
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "loadChannel"), object: nil, userInfo: ["ID": channelArray[indexPath.row].ID])
         
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! ChannelPanel
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! ChannelPanel
 
-        if let imageCache = cache.objectForKey("\(channelArray[indexPath.row].ID).jpg") as? UIImage
+        if let imageCache = cache.object(forKey: "\(channelArray[indexPath.row].ID).jpg" as NSString)
         {
             cell.image.image = imageCache
         }
             
-        else if (FileSystem.fileExist(FileSystem.getPath(NSSearchPathDirectory.LibraryDirectory, fileName: "\(self.channelArray[indexPath.row].ID).jpg")))
+        else if (FileSystem.fileExist(FileSystem.getPath(FileManager.SearchPathDirectory.libraryDirectory, fileName: "\(self.channelArray[indexPath.row].ID).jpg")))
         {
-            dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0))
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async
             {
                 let num = indexPath
 
-                let image = UIImage(data: FileSystem.getFile(NSSearchPathDirectory.LibraryDirectory, fileName: "\(self.channelArray[indexPath.row].ID).jpg")!)
-                self.cache.setObject(image!, forKey: "\(self.channelArray[indexPath.row].ID).jpg")
+                let image = UIImage(data: FileSystem.getFile(FileManager.SearchPathDirectory.libraryDirectory, fileName: "\(self.channelArray[indexPath.row].ID).jpg")!)
+                self.cache.setObject(image!, forKey: "\(self.channelArray[indexPath.row].ID).jpg" as NSString)
                     
-                dispatch_async(dispatch_get_main_queue())
+                DispatchQueue.main.async
                 {
-                    (collectionView.cellForItemAtIndexPath(num) as! ChannelPanel).image.image = image
+                    (collectionView.cellForItem(at: num) as! ChannelPanel).image.image = image
                 }
             }
         }
@@ -126,19 +126,19 @@ final class ChannelView: UIViewController, UICollectionViewDataSource, UICollect
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return channelArray.count }
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { return channelArray.count }
     
-    func collectionView(collectionView: UICollectionView, didHighlightItemAtIndexPath indexPath: NSIndexPath)
+    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath)
     {
-        (collectionView.cellForItemAtIndexPath(indexPath) as! ChannelPanel).image.alpha = 0.7
+        (collectionView.cellForItem(at: indexPath) as! ChannelPanel).image.alpha = 0.7
     }
     
-    func collectionView(collectionView: UICollectionView, didUnhighlightItemAtIndexPath indexPath: NSIndexPath)
+    func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath)
     {
-        (collectionView.cellForItemAtIndexPath(indexPath) as! ChannelPanel).image.alpha = 1
+        (collectionView.cellForItem(at: indexPath) as! ChannelPanel).image.alpha = 1
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle { return UIStatusBarStyle.LightContent }
+    override var preferredStatusBarStyle : UIStatusBarStyle { return UIStatusBarStyle.lightContent }
     
     override func didReceiveMemoryWarning() { super.didReceiveMemoryWarning() }
 }
