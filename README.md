@@ -38,10 +38,10 @@ I made a list of things I wanted in the application:
 
 
 #### Roadmap
-Now, I wrote this a year ago and I've been slowly working on it to improve its performance and reliability on both the front/back-end side. With the front-end, I had to update the source to conform to the changes to the Swift language. With the back-end, I had to try different package and javascript techniques to shave milliseconds off the processing/response time.
+Now, I wrote this in 2014 and I've been slowly working on it to improve its performance and reliability on both the front/back-end side. With the front-end, I had to update the source to conform to the changes to the Swift language. With the back-end, I had to try different package and javascript techniques to shave milliseconds off the processing/response time.
 
 
-#### Todo list for 2016:
+#### Todo list for future versions:
 - Use Core Data instead of NSUserDefaults to hold application data
 
 - Improve UICollectionView to be optimized for iPad
@@ -53,11 +53,9 @@ Now, I wrote this a year ago and I've been slowly working on it to improve its p
 - Explore porting the back-end to use Swift
 
 #### :)
-It's been a long road, but 1.0 is finally done. I'm proud of what is currently on GitHub.
+It's been a long road, but 1.x is finally done. I'm proud of what is currently on GitHub.
 
 Thank you to everyone who has helped me and this project along the way. (Friends, family, reddit testers!!)
-
-If you're interested, here's the iOS Application and the nodeJS service.
 
 ## Requirements
 
