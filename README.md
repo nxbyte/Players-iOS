@@ -12,14 +12,11 @@ In short, this is a project that I started after my finals in 2015 with the goal
 
 - 10.11+ El Capitan
 - iOS 8+
-- Xcode 8.2 (with Swift 3 support)
+- Xcode 9.2 (with Swift 4 support)
 
 ## Notice
 
-As of Players (v1.1), this branch will contain the last version to support: 
-
-- iOS 8 and iOS 9
-- Xcode 7.2 ~ 8.2 development
+As of Players (v1.2), this branch will contain the last version to support the legacy v1.
 
 ## License
 
