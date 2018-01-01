@@ -52,7 +52,7 @@ final class CacheView: UIViewController, UICollectionViewDataSource, UICollectio
         collectionView.reloadData()
     }
 
-    func longPress(_ gesture:UILongPressGestureRecognizer)
+    @objc func longPress(_ gesture:UILongPressGestureRecognizer)
     {
         if (gesture.state != UIGestureRecognizerState.began) { return }
         

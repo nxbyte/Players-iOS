@@ -15,7 +15,6 @@
 		C57B00351B091ABA00B4D490 /* PlayersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B00341B091ABA00B4D490 /* PlayersTests.swift */; };
 		C57B00401B091B8600B4D490 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B003F1B091B8600B4D490 /* SearchView.swift */; };
 		C57B00421B091B9600B4D490 /* CacheView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B00411B091B9600B4D490 /* CacheView.swift */; };
-		C57B00441B09231400B4D490 /* Just.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B00431B09231400B4D490 /* Just.swift */; };
 		C57B00461B09231B00B4D490 /* Cloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B00451B09231B00B4D490 /* Cloud.swift */; };
 		C57B00481B09235A00B4D490 /* UICells.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B00471B09235A00B4D490 /* UICells.swift */; };
 		C5BF34061B30D4E800DB109A /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF34051B30D4E800DB109A /* VideoView.swift */; };
@@ -46,7 +45,6 @@
 		C57B00341B091ABA00B4D490 /* PlayersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersTests.swift; sourceTree = "<group>"; };
 		C57B003F1B091B8600B4D490 /* SearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		C57B00411B091B9600B4D490 /* CacheView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheView.swift; sourceTree = "<group>"; };
-		C57B00431B09231400B4D490 /* Just.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Just.swift; sourceTree = "<group>"; };
 		C57B00451B09231B00B4D490 /* Cloud.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cloud.swift; sourceTree = "<group>"; };
 		C57B00471B09235A00B4D490 /* UICells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICells.swift; sourceTree = "<group>"; };
 		C5BF34051B30D4E800DB109A /* VideoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
@@ -148,7 +146,6 @@
 				C57B00451B09231B00B4D490 /* Cloud.swift */,
 				C5F7FD061B1008B800DF06E3 /* Extensions.swift */,
 				C57B00471B09235A00B4D490 /* UICells.swift */,
-				C57B00431B09231400B4D490 /* Just.swift */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -199,12 +196,12 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "Warren Seto";
 				TargetAttributes = {
 					C57B00181B091AB900B4D490 = {
 						CreatedOnToolsVersion = 6.3.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0920;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -213,7 +210,7 @@
 					};
 					C57B002D1B091ABA00B4D490 = {
 						CreatedOnToolsVersion = 6.3.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0920;
 						TestTargetID = C57B00181B091AB900B4D490;
 					};
 				};
@@ -269,7 +266,6 @@
 				C57B00421B091B9600B4D490 /* CacheView.swift in Sources */,
 				C5BF34061B30D4E800DB109A /* VideoView.swift in Sources */,
 				C57B00401B091B8600B4D490 /* SearchView.swift in Sources */,
-				C57B00441B09231400B4D490 /* Just.swift in Sources */,
 				C57B00481B09235A00B4D490 /* UICells.swift in Sources */,
 				C57B001F1B091AB900B4D490 /* AppDelegate.swift in Sources */,
 			);
@@ -321,14 +317,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -369,14 +371,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -418,7 +426,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -438,7 +447,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -455,7 +465,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "nextseto.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Players.app/Players";
 			};
 			name = Debug;
@@ -468,7 +479,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "nextseto.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Players.app/Players";
 			};
 			name = Release;

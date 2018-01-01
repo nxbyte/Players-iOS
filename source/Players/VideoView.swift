@@ -40,7 +40,7 @@ final class VideoView : AVPlayerViewController
         NotificationCenter.default.addObserver(self, selector: #selector(VideoView.play), name: NSNotification.Name(rawValue: "PlayVideo"), object: nil)
     }
     
-    func playerDidFinishPlaying(_ notify:Notification)
+    @objc func playerDidFinishPlaying(_ notify:Notification)
     {
         self.dismiss(animated: true, completion:
         {
@@ -49,7 +49,7 @@ final class VideoView : AVPlayerViewController
         })
     }
     
-    func play()
+    @objc func play()
     {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC),
         execute: {

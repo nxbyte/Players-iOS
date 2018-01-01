@@ -104,32 +104,25 @@ final class SearchView: UIViewController, UICollectionViewDataSource, UICollecti
                 {
                     let videoID = Server.videoID(video.url)
                     
-                    Just.get(video.thumbnail)
-                        {
-                            (r) in
-                            
-                            if (r.ok)
-                            {
-                                try? r.content?.write(to: URL(fileURLWithPath: "\(NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, .userDomainMask, true).first!)/\(videoID).jpg"), options: [.atomic])
-                            }
-                    }
+                    URLSession.shared.dataTask(with: URL(string: video.thumbnail)!, completionHandler: { (data, res, err) in
+                        if data != nil {
+                            try? data!.write(to: URL(fileURLWithPath: "\(NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, .userDomainMask, true).first!)/\(videoID).jpg"), options: [.atomic])
+                        }
+                    })
                     
                     LocalStore.set("cache", dictKey: videoID, dictValue: "\(video.title)///:///\(videoID)///:///\(video.time)///:///\(video.channelName)")
                     
-                    Just.get(mp4Url)
-                        {
-                            (r) in
-                            
-                            if (r.ok)
-                            {
-                                try? r.content?.write(to: URL(fileURLWithPath: "\(NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, .userDomainMask, true).first!)/\(videoID).mp4"), options: [.atomic])
-                            }
-                    }
+                    URLSession.shared.dataTask(with: URL(string: mp4Url)!, completionHandler: { (data, res, err) in
+                        
+                        if data != nil {
+                            try? data!.write(to: URL(fileURLWithPath: "\(NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, .userDomainMask, true).first!)/\(videoID).mp4"), options: [.atomic])
+                        }
+                    })
                 }
         }
     }
     
-    func longPress(_ gesture:UILongPressGestureRecognizer)
+    @objc func longPress(_ gesture:UILongPressGestureRecognizer)
     {
         if (gesture.state != UIGestureRecognizerState.began) { return }
         

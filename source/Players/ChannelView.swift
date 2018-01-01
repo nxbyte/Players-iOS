@@ -37,15 +37,11 @@ final class ChannelView: UIViewController, UICollectionViewDataSource, UICollect
                     {
                         (channelName, thumbnailURL) -> () in
                         
-                        Just.get(thumbnailURL)
-                            {
-                                (r) in
-                                
-                                if (r.ok)
-                                {
-                                    try? r.content?.write(to: URL(fileURLWithPath: "\(NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.libraryDirectory, .userDomainMask, true).first!)/\(id).jpg"), options: [.atomic])
-                                }
-                        }
+                        URLSession.shared.dataTask(with: URL(string: thumbnailURL)!, completionHandler: { (data, res, err) in
+                            if data != nil {
+                                try? data!.write(to: URL(fileURLWithPath: "\(NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, .userDomainMask, true).first!)/\(id).jpg"), options: [.atomic])
+                            }
+                        })
                 })
             }
         }
@@ -56,7 +52,7 @@ final class ChannelView: UIViewController, UICollectionViewDataSource, UICollect
         dismiss(animated: true, completion: nil)
     }
     
-    func longPress(_ gesture:UILongPressGestureRecognizer)
+    @objc func longPress(_ gesture:UILongPressGestureRecognizer)
     {
         if (gesture.state != UIGestureRecognizerState.began) { return }
         
