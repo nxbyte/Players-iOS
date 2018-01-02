@@ -66,7 +66,6 @@ final class SubscribedVC: UICollectionViewController, NSFetchedResultsController
         
         if (collectionView?.indexPathForItem(at: tapPoint) == nil) { return }
 
-        
         let selectedObject = coreData.object(at: collectionView!.indexPathForItem(at: tapPoint)!)
         
         present({ [unowned self] in

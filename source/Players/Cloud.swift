@@ -78,7 +78,7 @@ public final class Cloud
             } else {
                 callback([])
             }
-        }
+        }.resume()
     }
 
     /** Return only the full description and MP4 from a given video ID String */
@@ -94,7 +94,7 @@ public final class Cloud
             } else {
                 return callback(nil)
             }
-        }
+        }.resume()
     }
     
     /** Return the full video information including name, view count, etc and MP4 from a given video ID String */
@@ -110,7 +110,7 @@ public final class Cloud
             } else {
                 callback(nil)
             }
-        }
+        }.resume()
     }
     
     /** Returns an array of videos from a given Search Query */
@@ -126,7 +126,7 @@ public final class Cloud
             } else {
                 return callback(nil)
             }
-        }
+        }.resume()
     }
     
     /** Return only the description, subscriber count, and thumbnail from a given Channel ID String */
@@ -142,6 +142,6 @@ public final class Cloud
             } else {
                 callback(nil)
             }
-        }
+        }.resume()
     }
 }

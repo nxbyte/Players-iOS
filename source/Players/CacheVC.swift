@@ -39,6 +39,8 @@ final class CacheVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         try? self.coreData.performFetch()
 
         startTimer()
+        
+        (collectionViewLayout as! UICollectionViewFlowLayout).minimumLineSpacing = UIDevice.current.userInterfaceIdiom == .phone ? 0 : 4
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,6 +48,10 @@ final class CacheVC: UICollectionViewController, UICollectionViewDelegateFlowLay
 
         if !refreshTimer.isValid {
             startTimer()
+        }
+        
+        UIView.performWithoutAnimation {
+            self.collectionView?.reloadSections(IndexSet(integer: 0))
         }
     }
     

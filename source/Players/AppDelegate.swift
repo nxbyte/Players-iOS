@@ -136,7 +136,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                                     print("Warning: Can't save Channel Thumbnail into documents directory")
                                 }
                             }
-                        })
+                        }).resume()
                     } else {
                         print("Warning: Channel Details are invalid")
                     }

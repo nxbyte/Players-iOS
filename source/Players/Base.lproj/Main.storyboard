@@ -471,6 +471,7 @@
                                 <connections>
                                     <outlet property="duration" destination="Rme-qV-MCx" id="fup-6e-BXh"/>
                                     <outlet property="subtitle" destination="wBh-8r-UqT" id="FRr-5J-I4a"/>
+                                    <outlet property="thumbnail" destination="R7P-IE-Q9c" id="EZn-8w-lTg"/>
                                     <outlet property="title" destination="svW-4H-oqg" id="Ow9-jU-2fJ"/>
                                 </connections>
                             </collectionViewCell>
@@ -756,6 +757,7 @@
                                 <connections>
                                     <outlet property="duration" destination="lvU-lP-Oz6" id="fL2-GN-vMR"/>
                                     <outlet property="subtitle" destination="rAK-Z8-mYF" id="sfc-KU-iaC"/>
+                                    <outlet property="thumbnail" destination="9iE-Mv-YVb" id="PLG-4H-0hJ"/>
                                     <outlet property="title" destination="do0-nb-qXH" id="KHN-2L-KRQ"/>
                                     <segue destination="agJ-kC-EIS" kind="show" id="sL7-Di-Usc"/>
                                 </connections>
