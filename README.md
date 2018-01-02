@@ -30,7 +30,7 @@ Now, I wrote this in 2014 and I've been slowly working on it to improve its perf
 - [ ] Detecting and opening links for Channel URLs
 - [ ] Full details for cached content
 - [ ] Add Placeholders for empty View Controllers
-- [ ] Non-Hacky Backgroud Content Playback
+- [ ] Non-Hacky Background Content Playback
 - [ ] Now Playing Screen Implementation: Look Screen & Control Center
 - [ ] Details for Channels
 - [ ] More Options for Searching Videos
