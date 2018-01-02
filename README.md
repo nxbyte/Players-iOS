@@ -13,33 +13,6 @@ I love watching videos in my spare time. Whether its watching TV shows on my TiV
 I was just so fed up with other apps that I took it to myself to make something to satisfy my hunger of watching great content on Youtube.
 
 #### Development Requirements
-<<<<<<< HEAD
-
-I made a list of things I wanted in the application:
-
-##### Front-End: iOS Application called "Players"
-
-- Swift: Apple's latest programming language
-
-- UICollectionView: This type of view paradigm is ideal to show the metadata for a given video
-
-- iPhone / iPad Support: Be able to support all iOS devices. Must support most screen sizes
-
-- Easily interface to the backend: Simple GET requests and body parameters for backend communication
-
-##### Back-End: nodeJS web application and REST service called "ytn-cloud"
-
-- nodeJS: A simple lightweight server environment to quickly get up and running
-
-- express: To build some webpages and the REST API part of the service
-
-- async: Performance win using Async.each(...)
-
-- timsort: Performance win using a battle-tested fast sorting algorithm
-
-- node-ytdl: An abstraction over Youtube to access metadata for YouTube information
-
-=======
 
 - Swift: Apple's latest programming language
 
@@ -49,25 +22,10 @@ I made a list of things I wanted in the application:
 
 - iPhone / iPad Support: Be able to support all iOS devices
 
->>>>>>> v2.0
 #### Roadmap
 
 Now, I wrote this in 2014 and I've been slowly working on it to improve its performance and reliability on both the front/back-end side. With the front-end, I had to update the source to conform to the changes to the Swift language. With the back-end, I had to try different package and javascript techniques to shave milliseconds off the processing/response time.
 
-<<<<<<< HEAD
-#### Todo list for future versions:
-- Use Core Data instead of NSUserDefaults to hold application data
-
-- Improve UICollectionView to be optimized for iPad
-
-- Fully support URLSession with it's delegate methods
-
-- Implement a dedicated 'Channel' View Controller
-
-#### :)
-
-It's been a long road, but 1.x is finally done. I'm proud of what is currently on GitHub.
-=======
 - [ ] Time Stamps in Videos
 - [ ] Detecting and opening links for Channel URLs
 - [ ] Full details for cached content
@@ -85,7 +43,6 @@ It's been a long road, but 1.x is finally done. I'm proud of what is currently o
 #### :)
 
 It's been a long road, but it is finally done. I'm proud of what is currently on GitHub.
->>>>>>> v2.0
 
 Thank you to everyone who has helped me and this project along the way. (Friends, family, reddit testers!!)
 
