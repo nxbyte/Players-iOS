@@ -7,7 +7,6 @@ Players is an iOS application written in Swift that communicates with a custom b
 ## Screenshots
 
 ![image](https://github.com/nextseto/Players-iOS/blob/master/assets/iphoneX-screenshot.png)
-
 ![image](https://github.com/nextseto/Players-iOS/blob/master/assets/ipad2017-screenshot.png)
 
 ## Purpose
