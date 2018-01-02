@@ -1,8 +1,8 @@
-![image](https://github.com/nextseto/ytn-iOS/blob/master/assets/header-ytn-ios.png)
+![image](https://github.com/nextseto/Players-iOS/blob/master/assets/banner.png)
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/nextseto/Verilog-Projects/master/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/nextseto/Players-iOS/master/LICENSE)
 
-Players is an iOS application written in Swift that communicates with a custom backend ytn-cloud to get video information and metadata from Youtube.
+Players is an iOS application written in Swift that communicates with a custom backend Players-Cloud to get video information and metadata from Youtube.
 
 ## Purpose
 
@@ -13,6 +13,7 @@ I love watching videos in my spare time. Whether its watching TV shows on my TiV
 I was just so fed up with other apps that I took it to myself to make something to satisfy my hunger of watching great content on Youtube.
 
 #### Development Requirements
+<<<<<<< HEAD
 
 I made a list of things I wanted in the application:
 
@@ -38,10 +39,22 @@ I made a list of things I wanted in the application:
 
 - node-ytdl: An abstraction over Youtube to access metadata for YouTube information
 
+=======
+
+- Swift: Apple's latest programming language
+
+- Core Data/UserDefaults: Stores data for subscriptions and cached videos
+
+- UICollectionView: This type of view paradigm is ideal to show the metadata for a given video
+
+- iPhone / iPad Support: Be able to support all iOS devices
+
+>>>>>>> v2.0
 #### Roadmap
 
 Now, I wrote this in 2014 and I've been slowly working on it to improve its performance and reliability on both the front/back-end side. With the front-end, I had to update the source to conform to the changes to the Swift language. With the back-end, I had to try different package and javascript techniques to shave milliseconds off the processing/response time.
 
+<<<<<<< HEAD
 #### Todo list for future versions:
 - Use Core Data instead of NSUserDefaults to hold application data
 
@@ -54,19 +67,34 @@ Now, I wrote this in 2014 and I've been slowly working on it to improve its perf
 #### :)
 
 It's been a long road, but 1.x is finally done. I'm proud of what is currently on GitHub.
+=======
+- [ ] Time Stamps in Videos
+- [ ] Detecting and opening links for Channel URLs
+- [ ] Full details for cached content
+- [ ] Add Placeholders for empty View Controllers
+- [ ] Non-Hacky Backgroud Content Playback
+- [ ] Now Playing Screen Implementation: Look Screen & Control Center
+- [ ] Details for Channels
+- [ ] More Options for Searching Videos
+- [ ] Support iCloud Sync for Backing Up Subscriptions
+- [ ] Support Playlists
+- [ ] Twitch-App Style In-App Background Video
+- [ ] Support additional Youtube categories: Trending, Private, etc
+- [ ] Support additional video provides: Twitch, etc 
+
+#### :)
+
+It's been a long road, but it is finally done. I'm proud of what is currently on GitHub.
+>>>>>>> v2.0
 
 Thank you to everyone who has helped me and this project along the way. (Friends, family, reddit testers!!)
 
 ## Requirements
 
 - 10.13+ High Sierra
-- iOS 8+
+- iOS 11+
 - Xcode 9.2 (with Swift 4 support)
-
-## Notice
-
-As of Players (v1.2), this branch will contain the last version to support the legacy v1.x Cloud Service.
 
 ## License
 
-All source code in ytn-iOS (Players) is released under the MIT license. See LICENSE for details.
+All source code in Players-iOS is released under the MIT license. See LICENSE for details.
