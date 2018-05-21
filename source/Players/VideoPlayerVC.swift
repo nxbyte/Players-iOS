@@ -22,7 +22,7 @@ final class VideoPlayerVC : UICollectionViewController, UICollectionViewDelegate
         return $0
     } (AVPlayerViewController())
 
-    private lazy var isSubscribed:Bool = AppController.isSubscribedTo(ID: result.channelid)
+    private lazy var isSubscribed:Bool = AppController.isSubscribed(ID: result.channelid)
     
     private lazy var cellCount = 1
     
@@ -35,12 +35,12 @@ final class VideoPlayerVC : UICollectionViewController, UICollectionViewDelegate
                 DispatchQueue.main.async {
                     try? AVAudioSession.sharedInstance().setActive(true)
                     self.collectionView?.insertItems(at: [IndexPath(row: 1, section: 0)])
-                        self.collectionView?.reloadItems(at: [IndexPath(row: 1, section: 1), IndexPath(row: 2, section: 1)])
+                    self.collectionView?.reloadItems(at: [IndexPath(row: 1, section: 1), IndexPath(row: 2, section: 1)])
                     self.videoController?.player?.play()
                 }
                 
                 NotificationCenter.default.addObserver(forName: .UIApplicationDidEnterBackground, object: nil, queue: .current) { [weak self] _ in
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
                         self?.videoController?.player?.play()
                     })
                 }
@@ -246,7 +246,7 @@ final class VideoPlayerVC : UICollectionViewController, UICollectionViewDelegate
                 case 5:
                     if self.AppController.isCachedVideo(ID: result.videoid) { return }
 
-                    self.AppController.cacheVideo(result: result, withQuality: "sd", andCacheImage: nil)
+                    self.AppController.addCacheVideo(result: result, withQuality: "sd", andCacheImage: nil)
                 
                 default:
                     break

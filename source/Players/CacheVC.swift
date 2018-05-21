@@ -18,7 +18,7 @@ final class CacheVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     private lazy var coreData: NSFetchedResultsController<VideoCache> = {
         let fetch:NSFetchRequest<VideoCache> = VideoCache.fetchRequest()
         fetch.sortDescriptors = [NSSortDescriptor(key: "downloaded", ascending: false)]
-        fetch.fetchBatchSize = 10
+        fetch.fetchBatchSize = 8
         
         return NSFetchedResultsController(fetchRequest: fetch, managedObjectContext: AppController.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
     }()

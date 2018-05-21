@@ -41,7 +41,7 @@ protocol VideoProtocol {
 }
 
 protocol SearchProtocol {
-    func updateSearch(newOrder: String, newDuration: String, newOptions: [Int])
+    func applyFilters(newFilter: String, newOptions: [Int])
 }
 
 final class CompactVideoCell : UICollectionViewCell {

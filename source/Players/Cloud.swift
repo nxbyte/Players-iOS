@@ -51,12 +51,6 @@ struct SearchQuery : CustomStringConvertible {
         nextPageToken = " ",
         option = " "
     
-    mutating func resetSearch(newQuery:String) {
-        query = newQuery
-        nextPageToken = " "
-        option = " "
-    }
-    
     var description: String {
         return "\(query.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)/\(nextPageToken.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)/\(option.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)"
     }
@@ -114,17 +108,19 @@ public final class Cloud
     }
     
     /** Returns an array of videos from a given Search Query */
-    class func get (search payload:SearchQuery, results callback:@escaping (SearchResult?)->()) {
+    class func get (search payload:SearchQuery, results callback:@escaping (SearchResult)->()) {
+
+        print("https://custom_backend.com/search/\(payload)")
         
         URLSession.shared.dataTask(with: URL(string: "https://custom_backend.com/search/\(payload)")!) { (data, response, error) in
             if data != nil {
                 do {
                     return callback(try JSONDecoder().decode(SearchResult.self, from: data!))
                 } catch {
-                    return callback(nil)
+                    return callback(SearchResult(nextToken: "", results: []))
                 }
             } else {
-                return callback(nil)
+                return callback(SearchResult(nextToken: "", results: []))
             }
         }.resume()
     }

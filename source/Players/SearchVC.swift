@@ -16,7 +16,7 @@ final class SearchVC: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     private lazy var videoResults : [VideoResult] = []
     
-    private lazy var payload = SearchQuery()
+    private lazy var payload : SearchQuery = SearchQuery()
     
     private lazy var savedOptions = [0, 0, 0]
     
@@ -30,7 +30,7 @@ final class SearchVC: UICollectionViewController, UICollectionViewDelegateFlowLa
     override func viewDidLoad() {
         
         super.viewDidLoad()
-
+        
         (collectionViewLayout as! UICollectionViewFlowLayout).sectionHeadersPinToVisibleBounds = true
         
         (collectionViewLayout as! UICollectionViewFlowLayout).minimumLineSpacing = UIDevice.current.userInterfaceIdiom == .phone ? 0 : 4
@@ -50,7 +50,7 @@ final class SearchVC: UICollectionViewController, UICollectionViewDelegateFlowLa
                 self?.collectionView?.performBatchUpdates(nil, completion: nil)
             }
             
-        }, completion: nil)
+            }, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -91,7 +91,7 @@ final class SearchVC: UICollectionViewController, UICollectionViewDelegateFlowLa
                 
                 let cacheImage:UIImage? = UIDevice.current.userInterfaceIdiom == .phone ? (self.collectionView?.cellForItem(at: selectedIndexPath) as! CompactVideoCell).thumbnail.image : (self.collectionView?.cellForItem(at: selectedIndexPath) as! LargeVideoCell).thumbnail.image
                 
-                self.AppController.cacheVideo(result: selectedResult, withQuality: "sd", andCacheImage: cacheImage)
+                self.AppController.addCacheVideo(result: selectedResult, withQuality: "sd", andCacheImage: cacheImage)
             })
             
             $0.addAction(UIAlertAction(title: "Download HD", style: .default) { alert in
@@ -100,7 +100,7 @@ final class SearchVC: UICollectionViewController, UICollectionViewDelegateFlowLa
                 
                 let cacheImage:UIImage? = UIDevice.current.userInterfaceIdiom == .phone ? (self.collectionView?.cellForItem(at: selectedIndexPath) as! CompactVideoCell).thumbnail.image : (self.collectionView?.cellForItem(at: selectedIndexPath) as! LargeVideoCell).thumbnail.image
                 
-                self.AppController.cacheVideo(result: selectedResult, withQuality: "hd", andCacheImage: cacheImage)
+                self.AppController.addCacheVideo(result: selectedResult, withQuality: "hd", andCacheImage: cacheImage)
             })
             
             $0.addAction(UIAlertAction(title: "Share Video", style: .default) { alert in
@@ -142,19 +142,18 @@ final class SearchVC: UICollectionViewController, UICollectionViewDelegateFlowLa
         
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         
-        Cloud.get(search: payload) { (searchResults) in
-            
-            if let validResults = searchResults {
-                self.videoResults = validResults.results
-                self.payload.nextPageToken = validResults.nextToken
-                
-            } else {
-                self.videoResults = []
-            }
+        Cloud.get(search: payload) { (response) in
+
+            self.videoResults = response.results
+            self.payload.nextPageToken = response.nextToken
             
             DispatchQueue.main.async {
                 UIView.performWithoutAnimation {
-                    self.collectionView?.reloadData()
+                    if self.collectionView?.numberOfItems(inSection: 0) != 0 {
+                        self.collectionView?.scrollToItem(at: IndexPath(row: 0, section: 0), at: UICollectionViewScrollPosition.bottom, animated: false)
+                    }
+                    
+                    self.collectionView?.reloadSections(IndexSet(integer: 0))
                 }
                 
                 UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -162,23 +161,11 @@ final class SearchVC: UICollectionViewController, UICollectionViewDelegateFlowLa
         }
     }
     
-    func updateSearch(newOrder: String, newDuration: String, newOptions: [Int]) {
+    func applyFilters(newFilter: String, newOptions: [Int]) {
         
         savedOptions = newOptions
-        
         payload.nextPageToken = " "
-        
-        var optionsArray:[String] = []
-        
-        if newOrder != "" {
-            optionsArray.append("order=\(newOrder)")
-        }
-        
-        if newDuration != "" {
-            optionsArray.append("videoDuration=\(newDuration)")
-        }
-        
-        payload.option = optionsArray.joined(separator: "&")
+        payload.option = newFilter
         
         performSearch()
     }
@@ -190,14 +177,13 @@ final class SearchVC: UICollectionViewController, UICollectionViewDelegateFlowLa
         
         textField.resignFirstResponder()
         
-        if textField.text == payload.query {
+        guard let queryString = textField.text, queryString != payload.query else {
             return true
         }
         
-        payload.resetSearch(newQuery: textField.text!)
-        savedOptions = [0, 0, 0]
-        
+        payload = SearchQuery(query: queryString, nextPageToken: " ", option: " ")
         performSearch()
+        savedOptions = [0, 0, 0]
         
         return true
     }
@@ -262,7 +248,7 @@ final class SearchVC: UICollectionViewController, UICollectionViewDelegateFlowLa
             return cell
         }
     }
-
+    
     
     // MARK: UICollectionViewDataSourcePrefetching Implementation
     
@@ -270,30 +256,33 @@ final class SearchVC: UICollectionViewController, UICollectionViewDelegateFlowLa
         
         SearchQueue.async {
             
-            if let triggerLoad = indexPaths.first?.row, triggerLoad > self.videoResults.count - 7 {
+            if let triggerLoad = indexPaths.first?.row, triggerLoad > self.videoResults.count - 8 {
                 
                 DispatchQueue.main.async {
                     self.collectionView?.isPrefetchingEnabled = false
                     UIApplication.shared.isNetworkActivityIndicatorVisible = true
                 }
-
+                
                 /* Search Async */
-                Cloud.get(search: self.payload, results: { (searchResults) in
+                Cloud.get(search: self.payload, results: { (response) in
                     
-                    if let validResults = searchResults {
-                        self.videoResults += validResults.results
-                        self.payload.nextPageToken = validResults.nextToken
+                    self.payload.nextPageToken = response.nextToken
                         
-                        DispatchQueue.main.async {
-                            UIView.performWithoutAnimation {
-                                self.collectionView?.reloadData()
-                            }
-                        }
-                    }
-                    
                     DispatchQueue.main.async {
-                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                        self.collectionView?.isPrefetchingEnabled = true
+                        UIView.performWithoutAnimation {
+                            self.collectionView?.performBatchUpdates({
+                                    
+                                for count in 0 ..< response.results.count {
+                                    self.collectionView?.insertItems(at: [IndexPath(item: count + response.results.count, section: 0)])
+                                }
+                                    
+                                self.videoResults += response.results
+                                    
+                            }, completion: { (flag) in
+                                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                                self.collectionView?.isPrefetchingEnabled = true
+                            })
+                        }
                     }
                 })
             }

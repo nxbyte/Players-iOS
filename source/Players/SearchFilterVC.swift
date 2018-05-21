@@ -13,7 +13,7 @@ final class SearchFilterVC: UITableViewController {
     
     private let filterTitles = ["Order By", "Duration"],
         filterOptions = [["Relevance", "Date Published", "View Count", "Rating"], ["All", "< 4 minutes", "> 20 minutes"]],
-        internalFilters = [["", "date", "viewCount", "rating"], ["", "short", "long"]]
+        filters = [["", "date", "viewCount", "rating"], ["", "short", "long"]]
     
     lazy var selectedOptions = [0, 0, 0]
     
@@ -33,6 +33,21 @@ final class SearchFilterVC: UITableViewController {
         super.willTransition(to: newCollection, with: coordinator)
         
         setViewController(with: newCollection)
+    }
+    
+    private func serializeFilters() -> String {
+
+        var filtersArray:[String] = []
+        
+        if selectedOptions[0] != 0 {
+            filtersArray.append("order=\(filters[0][selectedOptions[0]])")
+        }
+        
+        if selectedOptions[1] != 0 {
+            filtersArray.append("videoDuration=\(filters[1][selectedOptions[1]])")
+        }
+
+        return filtersArray.isEmpty ? " " : filtersArray.joined(separator: "&")
     }
     
     
@@ -64,7 +79,7 @@ final class SearchFilterVC: UITableViewController {
             $0.accessoryType = selectedOptions[indexPath.section] == indexPath.row ? .checkmark : .none
             
             return $0
-            } (tableView.dequeueReusableCell(withIdentifier: "SearchFilterRow", for: indexPath))
+        } (tableView.dequeueReusableCell(withIdentifier: "SearchFilterRow", for: indexPath))
     }
     
     
@@ -79,6 +94,6 @@ final class SearchFilterVC: UITableViewController {
         
         selectedOptions[indexPath.section] = indexPath.row
         
-        delegate?.updateSearch(newOrder: internalFilters[0][selectedOptions[0]], newDuration: internalFilters[1][selectedOptions[1]], newOptions: selectedOptions)
+        delegate?.applyFilters(newFilter: serializeFilters(), newOptions: selectedOptions)
     }
 }

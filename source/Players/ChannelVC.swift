@@ -76,7 +76,7 @@ final class ChannelVC: UICollectionViewController, UICollectionViewDelegateFlowL
                 
                 let cacheImage:UIImage? = UIDevice.current.userInterfaceIdiom == .phone ? (self.collectionView?.cellForItem(at: selectedIndexPath) as! CompactVideoCell).thumbnail.image : (self.collectionView?.cellForItem(at: selectedIndexPath) as! LargeVideoCell).thumbnail.image
                 
-                self.AppController.cacheVideo(result: selectedResult, withQuality: "sd", andCacheImage: cacheImage)
+                self.AppController.addCacheVideo(result: selectedResult, withQuality: "sd", andCacheImage: cacheImage)
             })
             
             $0.addAction(UIAlertAction(title: "Download HD", style: .default) { alert in
@@ -85,7 +85,7 @@ final class ChannelVC: UICollectionViewController, UICollectionViewDelegateFlowL
                 
                 let cacheImage:UIImage? = UIDevice.current.userInterfaceIdiom == .phone ? (self.collectionView?.cellForItem(at: selectedIndexPath) as! CompactVideoCell).thumbnail.image : (self.collectionView?.cellForItem(at: selectedIndexPath) as! LargeVideoCell).thumbnail.image
                 
-                self.AppController.cacheVideo(result: selectedResult, withQuality: "hd", andCacheImage: cacheImage)
+                self.AppController.addCacheVideo(result: selectedResult, withQuality: "hd", andCacheImage: cacheImage)
             })
             
             $0.addAction(UIAlertAction(title: "Share Video", style: .default) { alert in
@@ -113,15 +113,13 @@ final class ChannelVC: UICollectionViewController, UICollectionViewDelegateFlowL
         
         textField.resignFirstResponder()
         
-        Cloud.get(search: SearchQuery(query: textField.text!, nextPageToken: " ", option: "channelId=\(metadata.id)")) { (channelResults) in
+        Cloud.get(search: SearchQuery(query: textField.text!, nextPageToken: " ", option: "channelId=\(metadata.id)")) { (response) in
             
-            if let validResults = channelResults {
-                self.videoResults = validResults.results
-                // MARK : NEXTTOKEN NOT USED
+            self.videoResults = response.results
+            // MARK : NEXTTOKEN NOT USED
                 
-                DispatchQueue.main.async {
-                    self.collectionView?.reloadData()
-                }
+            DispatchQueue.main.async {
+                self.collectionView?.reloadSections(IndexSet(integer: 0))
             }
         }
         
@@ -149,7 +147,7 @@ final class ChannelVC: UICollectionViewController, UICollectionViewDelegateFlowL
             
             DispatchQueue.main.async {
                 UIView.performWithoutAnimation {
-                    self.collectionView?.reloadData()
+                    self.collectionView?.reloadSections(IndexSet(integer: 0))
                 }
             }
         }

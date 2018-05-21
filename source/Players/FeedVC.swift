@@ -9,14 +9,13 @@ import AVFoundation
 
 final class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
-    
     // MARK: Properties
     
     private let AppController : AppDelegate = UIApplication.shared.delegate as! AppDelegate
     
     private lazy var videoResults : [VideoResult] = []
     
-    
+
     // MARK: UIViewController Implementation
     
     override func viewDidLoad() {
@@ -92,7 +91,7 @@ final class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayo
                 
                 let cacheImage:UIImage? = UIDevice.current.userInterfaceIdiom == .phone ? (self.collectionView?.cellForItem(at: selectedIndexPath) as! CompactVideoCell).thumbnail.image : (self.collectionView?.cellForItem(at: selectedIndexPath) as! LargeVideoCell).thumbnail.image
 
-                self.AppController.cacheVideo(result: selectedResult, withQuality: "sd", andCacheImage: cacheImage)
+                self.AppController.addCacheVideo(result: selectedResult, withQuality: "sd", andCacheImage: cacheImage)
             })
             
             $0.addAction(UIAlertAction(title: "Download HD", style: .default) { alert in
@@ -101,7 +100,7 @@ final class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayo
                 
                 let cacheImage:UIImage? = UIDevice.current.userInterfaceIdiom == .phone ? (self.collectionView?.cellForItem(at: selectedIndexPath) as! CompactVideoCell).thumbnail.image : (self.collectionView?.cellForItem(at: selectedIndexPath) as! LargeVideoCell).thumbnail.image
                 
-                self.AppController.cacheVideo(result: selectedResult, withQuality: "hd", andCacheImage: cacheImage)
+                self.AppController.addCacheVideo(result: selectedResult, withQuality: "hd", andCacheImage: cacheImage)
             })
             
             $0.addAction(UIAlertAction(title: "Share Video", style: .default) { alert in
@@ -109,7 +108,6 @@ final class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayo
                 self.present({
                     $0.popoverPresentationController?.sourceView = self.collectionView
                     $0.popoverPresentationController?.sourceRect = CGRect(x: tapPoint.x, y: tapPoint.y, width: 1.0, height: 1.0)
-                    
                     return $0
                 } (UIActivityViewController(activityItems: ["Take a look:\n", selectedResult.title + "\n", URL(string:"https://youtu.be/\(selectedResult.videoid)")!], applicationActivities: nil)), animated: true, completion: nil)
             })

@@ -9,9 +9,9 @@ import AVFoundation
 import CoreData
 
 @UIApplicationMain
+
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    
     // MARK: Properties
     
     var window: UIWindow?
@@ -113,7 +113,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     
     /** Subscribes and stores data for a given channel identifier.
      If components are unable to be stored, it will gracefully fail and display an error message */
-    func subscribe (channelName name:String, withID ID: String) {
+    func subscribe(channelName name:String, withID ID: String) {
         persistentContainer.performBackgroundTask { (context) in
             let _:Subscription = {
                 $0.name = name
@@ -149,7 +149,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     
     /** Removes stored data and entries for a given channel identifier.
      If cached components are unable to be removed, it will gracefully fail and display an error message */
-    func unsubscribe (channelID ID: String) {
+    func unsubscribe(channelID ID: String) {
         persistentContainer.performBackgroundTask { (context) in
             
             let fetch:NSFetchRequest<Subscription> = Subscription.fetchRequest()
@@ -177,7 +177,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     /** Returns whether a given channel identifier is found in the device's subscriptions */
-    func isSubscribedTo (ID: String) -> Bool {
+    func isSubscribed(ID: String) -> Bool {
         let fetch:NSFetchRequest<Subscription> = Subscription.fetchRequest()
         fetch.predicate = NSPredicate(format: "id == %@", ID)
         fetch.fetchLimit = 1
@@ -191,7 +191,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     
     /** Cached data for a given video identifier.
      If components are unable to be stored, it will gracefully fail and display an error message */
-    func cacheVideo(result:VideoResult, withQuality: String, andCacheImage image:UIImage?) {
+    func addCacheVideo(result:VideoResult, withQuality: String, andCacheImage image:UIImage?) {
         
         self.persistentContainer.performBackgroundTask { (context) in
             
@@ -267,16 +267,16 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     /** Returns whether a given video identifier is cached on the device */
-    func isCachedVideo (ID: String) -> Bool {
+    func isCachedVideo(ID: String) -> Bool {
         let fetch:NSFetchRequest<VideoCache> = VideoCache.fetchRequest()
         fetch.predicate = NSPredicate(format: "id == %@", ID)
         fetch.fetchLimit = 1
         
         if let result = try? persistentContainer.viewContext.count(for: fetch) {
             return result == 1 ? true : false
+        } else {
+            return false
         }
-        
-        return false
     }
     
     
