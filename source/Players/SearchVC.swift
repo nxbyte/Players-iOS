@@ -18,11 +18,11 @@ final class SearchVC: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     private lazy var payload : SearchQuery = SearchQuery()
     
-    private lazy var savedOptions = [0, 0, 0]
+    private lazy var options : [Int] = [0, 0, 0]
     
-    private lazy var SearchQueue:DispatchQueue = DispatchQueue(label: "search", qos: .background, target: nil)
+    private lazy var SearchQueue : DispatchQueue = DispatchQueue(label: "search", qos: .background, target: nil)
     
-    private weak var searchBarHeader:UICollectionReusableView?
+    private weak var searchBarHeader : UICollectionReusableView?
     
     
     // MARK: UIViewController Implementation
@@ -126,7 +126,7 @@ final class SearchVC: UICollectionViewController, UICollectionViewDelegateFlowLa
         if let nextVC = self.storyboard?.instantiateViewController(withIdentifier: "SearchFilterVC") as? SearchFilterVC {
             
             nextVC.delegate = self
-            nextVC.selectedOptions = savedOptions
+            nextVC.selected = options
             
             let presentationController = SlideUpTransition(presentedViewController: nextVC, presenting: self)
             nextVC.transitioningDelegate = presentationController
@@ -163,7 +163,7 @@ final class SearchVC: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     func applyFilters(newFilter: String, newOptions: [Int]) {
         
-        savedOptions = newOptions
+        options = newOptions
         payload.nextPageToken = " "
         payload.option = newFilter
         
@@ -183,7 +183,7 @@ final class SearchVC: UICollectionViewController, UICollectionViewDelegateFlowLa
         
         payload = SearchQuery(query: queryString, nextPageToken: " ", option: " ")
         performSearch()
-        savedOptions = [0, 0, 0]
+        options = [0, 0, 0]
         
         return true
     }

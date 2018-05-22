@@ -16,11 +16,11 @@ final class ChannelVC: UICollectionViewController, UICollectionViewDelegateFlowL
     
     private lazy var videoResults : [VideoResult] = []
     
-    var metadata:(name: String, id: String)!
+    var metadata : (name: String, id: String)!
     
-    var delegate:VideoProtocol?
+    var delegate : VideoProtocol?
     
-    private weak var searchBarHeader:UICollectionReusableView?
+    private weak var searchBarHeader : UICollectionReusableView?
     
     
     // MARK: UIViewController Implementation

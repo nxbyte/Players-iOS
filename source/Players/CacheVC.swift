@@ -15,7 +15,7 @@ final class CacheVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     
     private let AppController : AppDelegate = UIApplication.shared.delegate as! AppDelegate
     
-    private lazy var coreData: NSFetchedResultsController<VideoCache> = {
+    private lazy var coreData : NSFetchedResultsController<VideoCache> = {
         let fetch:NSFetchRequest<VideoCache> = VideoCache.fetchRequest()
         fetch.sortDescriptors = [NSSortDescriptor(key: "downloaded", ascending: false)]
         fetch.fetchBatchSize = 8
@@ -23,11 +23,11 @@ final class CacheVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         return NSFetchedResultsController(fetchRequest: fetch, managedObjectContext: AppController.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
     }()
     
-    private let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.path
+    private let DocumentsDirectory : String = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.path
     
-    private lazy var downloadProgress:[String:String] = [:]
+    private lazy var downloadProgress : [String:String] = [:]
     
-    private var refreshTimer:Timer!
+    private var refreshTimer : Timer!
     
     
     // MARK: UIViewController Implementation

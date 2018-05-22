@@ -128,7 +128,7 @@ final class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayo
         
         Cloud.get(subscriptions: AppController.subscriptions) { (results) in
             self.videoResults = results
-            
+
             DispatchQueue.main.async {
                 self.collectionView?.refreshControl?.endRefreshing()
                 self.collectionView?.reloadSections(IndexSet(integer: 0))

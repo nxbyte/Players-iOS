@@ -13,7 +13,7 @@ final class SubscribedVC: UICollectionViewController, NSFetchedResultsController
     
     // MARK: Properties
     
-    private lazy var coreData: NSFetchedResultsController<Subscription> = {
+    private lazy var coreData : NSFetchedResultsController<Subscription> = {
         let fetch:NSFetchRequest<Subscription> = Subscription.fetchRequest()
         fetch.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         fetch.fetchBatchSize = 10
@@ -21,7 +21,7 @@ final class SubscribedVC: UICollectionViewController, NSFetchedResultsController
         return NSFetchedResultsController(fetchRequest: fetch, managedObjectContext: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
     }()
     
-    private let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.path
+    private let DocumentsDirectory : String = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.path
     
     
     // MARK: UIViewController Implementation

@@ -2,7 +2,7 @@
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/nextseto/Players-iOS/master/LICENSE)
 
-Players is an iOS application written in Swift that communicates with a custom backend Players-Cloud to get video information and metadata from Youtube.
+Players is an iOS application written in Swift that communicates with a custom backend `Players-Cloud` to get video information and metadata from Youtube.
 
 ## Screenshots
 

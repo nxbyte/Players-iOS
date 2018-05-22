@@ -46,42 +46,42 @@ protocol SearchProtocol {
 
 final class CompactVideoCell : UICollectionViewCell {
 
-    @IBOutlet weak var title: UILabel!
-    @IBOutlet weak var thumbnail: UIImageView!
-    @IBOutlet weak var views: UILabel!
-    @IBOutlet weak var duration: UILabel!
-    @IBOutlet weak var channelName: UILabel!
+    @IBOutlet weak var title       : UILabel!
+    @IBOutlet weak var thumbnail   : UIImageView!
+    @IBOutlet weak var views       : UILabel!
+    @IBOutlet weak var duration    : UILabel!
+    @IBOutlet weak var channelName : UILabel!
 }
 
 final class LargeVideoCell : UICollectionViewCell {
 
-    @IBOutlet weak var title: UILabel!
-    @IBOutlet weak var thumbnail: UIImageView!
-    @IBOutlet weak var subtitle: UILabel!
-    @IBOutlet weak var duration: UILabel!
+    @IBOutlet weak var title     : UILabel!
+    @IBOutlet weak var thumbnail : UIImageView!
+    @IBOutlet weak var subtitle  : UILabel!
+    @IBOutlet weak var duration  : UILabel!
 }
 
 final class SubscriptionCell : UICollectionViewCell {
 
-    @IBOutlet weak var thumbnail: UIImageView!
-    @IBOutlet weak var name: UILabel!
+    @IBOutlet weak var thumbnail : UIImageView!
+    @IBOutlet weak var name      : UILabel!
 }
 
 final class SearchHeaderView : UICollectionReusableView {
 
-    @IBOutlet weak var headerStyle: UIVisualEffectView!
-    @IBOutlet weak var searchField: UITextField!
+    @IBOutlet weak var headerStyle : UIVisualEffectView!
+    @IBOutlet weak var searchField : UITextField!
 }
 
 final class VideoTitleCell : UICollectionViewCell {
-    @IBOutlet weak var title: UILabel!
+    @IBOutlet weak var title : UILabel!
 }
 
 final class VideoDescriptionCell : UICollectionViewCell {
-    @IBOutlet weak var detail: UITextView!
+    @IBOutlet weak var detail : UITextView!
 }
 
 final class VideoIconCell : UICollectionViewCell {
-    @IBOutlet weak var thumbnail: UIImageView!
-    @IBOutlet weak var info: UILabel!
+    @IBOutlet weak var thumbnail : UIImageView!
+    @IBOutlet weak var info      : UILabel!
 }

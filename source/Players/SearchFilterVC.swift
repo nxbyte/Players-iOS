@@ -11,13 +11,14 @@ final class SearchFilterVC: UITableViewController {
     
     // MARK: Properties
     
-    private let filterTitles = ["Order By", "Duration"],
-        filterOptions = [["Relevance", "Date Published", "View Count", "Rating"], ["All", "< 4 minutes", "> 20 minutes"]],
-        filters = [["", "date", "viewCount", "rating"], ["", "short", "long"]]
+    private let titles : [String] = ["Order By", "Duration"]
     
-    lazy var selectedOptions = [0, 0, 0]
+    private let options : [[String]] = [["Relevance", "Date Published", "View Count", "Rating"], ["All", "< 4 minutes", "> 20 minutes"]],
+                filters = [["", "date", "viewCount", "rating"], ["", "short", "long"]]
     
-    var delegate:SearchProtocol?
+    var selected : [Int]!
+    
+    var delegate : SearchProtocol?
     
     
     // MARK: UIViewController Implementation
@@ -39,12 +40,12 @@ final class SearchFilterVC: UITableViewController {
 
         var filtersArray:[String] = []
         
-        if selectedOptions[0] != 0 {
-            filtersArray.append("order=\(filters[0][selectedOptions[0]])")
+        if selected[0] != 0 {
+            filtersArray.append("order=\(filters[0][selected[0]])")
         }
         
-        if selectedOptions[1] != 0 {
-            filtersArray.append("videoDuration=\(filters[1][selectedOptions[1]])")
+        if selected[1] != 0 {
+            filtersArray.append("videoDuration=\(filters[1][selected[1]])")
         }
 
         return filtersArray.isEmpty ? " " : filtersArray.joined(separator: "&")
@@ -61,22 +62,22 @@ final class SearchFilterVC: UITableViewController {
     // MARK: UITableViewDataSource Implementation
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return filterOptions.count
+        return options.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filterOptions[section].count
+        return options[section].count
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return filterTitles[section]
+        return titles[section]
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         return {
-            $0.textLabel?.text = filterOptions[indexPath.section][indexPath.row]
-            $0.accessoryType = selectedOptions[indexPath.section] == indexPath.row ? .checkmark : .none
+            $0.textLabel?.text = options[indexPath.section][indexPath.row]
+            $0.accessoryType = selected[indexPath.section] == indexPath.row ? .checkmark : .none
             
             return $0
         } (tableView.dequeueReusableCell(withIdentifier: "SearchFilterRow", for: indexPath))
@@ -89,11 +90,11 @@ final class SearchFilterVC: UITableViewController {
         
         // Update the TableView UI
         tableView.deselectRow(at: indexPath, animated: true)
-        tableView.cellForRow(at: IndexPath(item: selectedOptions[indexPath.section], section: indexPath.section))?.accessoryType = .none
+        tableView.cellForRow(at: IndexPath(item: selected[indexPath.section], section: indexPath.section))?.accessoryType = .none
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         
-        selectedOptions[indexPath.section] = indexPath.row
+        selected[indexPath.section] = indexPath.row
         
-        delegate?.applyFilters(newFilter: serializeFilters(), newOptions: selectedOptions)
+        delegate?.applyFilters(newFilter: serializeFilters(), newOptions: selected)
     }
 }

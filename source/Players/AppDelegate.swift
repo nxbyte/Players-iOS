@@ -14,9 +14,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: Properties
     
-    var window: UIWindow?
+    var window : UIWindow?
     
-    lazy var persistentContainer: NSPersistentContainer = {
+    lazy var persistentContainer : NSPersistentContainer = {
         let container: NSPersistentContainer = {
             return $0
         }(NSPersistentContainer(name: "Players"))
@@ -31,7 +31,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         return container
     }()
     
-    lazy var downloadsSession: URLSession = {
+    lazy var downloadsSession : URLSession = {
         let config = URLSessionConfiguration.background(withIdentifier: "\(Bundle.main.bundleIdentifier!).background")
         let delegateVC = ((self.window?.rootViewController as! UITabBarController).childViewControllers as! [UINavigationController]).last!.viewControllers.first as! CacheVC
         return URLSession(configuration: config, delegate: delegateVC, delegateQueue: nil)
@@ -57,7 +57,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-        
         return true
     }
     

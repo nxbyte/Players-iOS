@@ -16,19 +16,19 @@ final class VideoPlayerVC : UICollectionViewController, UICollectionViewDelegate
     
     private let AppController : AppDelegate = UIApplication.shared.delegate as! AppDelegate
     
-    lazy var videoController:AVPlayerViewController? = { [unowned self] in
+    lazy var videoController : AVPlayerViewController? = { [unowned self] in
         $0.view.sizeToFit()
         $0.showsPlaybackControls = true
         return $0
     } (AVPlayerViewController())
 
-    private lazy var isSubscribed:Bool = AppController.isSubscribed(ID: result.channelid)
+    private lazy var isSubscribed : Bool = AppController.isSubscribed(ID: result.channelid)
     
-    private lazy var cellCount = 1
+    private lazy var cellCount : Int = 1
     
-    var result:VideoResult!
+    var result : VideoResult!
     
-    var detail:VideoDetail! {
+    var detail : VideoDetail! {
         didSet {
             if self.cellCount == 1 {
                 self.cellCount = 2

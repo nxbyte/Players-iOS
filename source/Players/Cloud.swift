@@ -47,9 +47,9 @@ struct SearchResult :Decodable {
 /* Data Structure: Stores Search Query Information for a Search Request */
 struct SearchQuery : CustomStringConvertible {
     
-    var query = "",
-        nextPageToken = " ",
-        option = " "
+    var query         : String = "",
+        nextPageToken : String = " ",
+        option        : String = " "
     
     var description: String {
         return "\(query.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)/\(nextPageToken.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)/\(option.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!)"
@@ -59,10 +59,15 @@ struct SearchQuery : CustomStringConvertible {
 /* API for Accessing Youtube Data with the Cloud Service */
 public final class Cloud
 {
+    #if DEBUG
+        static var baseURL : String = "https://customURL-beta.com"
+    #else
+        static var baseURL : String = "https://customURL.com"
+    #endif
+    
     /** Returns an array of recent videos from a String of Channel ID Strings seperated by commas */
     class func get(subscriptions:String, results callback: @escaping ([VideoResult]) -> Void) {
-        
-        URLSession.shared.dataTask(with: URL(string: "https://custom_backend.com/channel/\(subscriptions)")!) { (data, response, error) in
+        URLSession.shared.dataTask(with: URL(string: "\(self.baseURL)/channel/\(subscriptions)")!) { (data, response, error) in
             if data != nil {
                 do {
                     return callback(try JSONDecoder().decode([VideoResult].self, from: data!))
@@ -78,7 +83,7 @@ public final class Cloud
     /** Return only the full description and MP4 from a given video ID String */
     class func get (video ID:String, withQuality quality:String, details callback: @escaping (VideoDetail?) -> Void) {
 
-        URLSession.shared.dataTask(with: URL(string: "https://custom_backend.com/video/detail/\(ID)/\(quality)")!) { (data, response, error) in
+        URLSession.shared.dataTask(with: URL(string: "\(self.baseURL)/video/detail/\(ID)/\(quality)")!) { (data, response, error) in
             if data != nil {
                 do {
                     return callback(try JSONDecoder().decode(VideoDetail.self, from: data!))
@@ -94,7 +99,7 @@ public final class Cloud
     /** Return the full video information including name, view count, etc and MP4 from a given video ID String */
     class func get (video ID:String, withQuality quality:String, entry callback: @escaping (VideoEntry?) -> Void) {
         
-        URLSession.shared.dataTask(with: URL(string: "https://custom_backend.com/video/\(ID)/\(quality)")!) { (data, response, error) in
+        URLSession.shared.dataTask(with: URL(string: "\(self.baseURL)/video/\(ID)/\(quality)")!) { (data, response, error) in
             if data != nil {
                 do {
                     return callback(try JSONDecoder().decode(VideoEntry.self, from: data!))
@@ -110,9 +115,9 @@ public final class Cloud
     /** Returns an array of videos from a given Search Query */
     class func get (search payload:SearchQuery, results callback:@escaping (SearchResult)->()) {
 
-        print("https://custom_backend.com/search/\(payload)")
+        print("https://ytn.herokuapp.com/search/\(payload)")
         
-        URLSession.shared.dataTask(with: URL(string: "https://custom_backend.com/search/\(payload)")!) { (data, response, error) in
+        URLSession.shared.dataTask(with: URL(string: "\(self.baseURL)/search/\(payload)")!) { (data, response, error) in
             if data != nil {
                 do {
                     return callback(try JSONDecoder().decode(SearchResult.self, from: data!))
@@ -128,7 +133,7 @@ public final class Cloud
     /** Return only the description, subscriber count, and thumbnail from a given Channel ID String */
     class func get (channel ID:String, details callback:@escaping (ChannelDetail?)->()) {
         
-        URLSession.shared.dataTask(with: URL(string: "https://custom_backend.com/channel/detail/\(ID)")!) { (data, response, error) in
+        URLSession.shared.dataTask(with: URL(string: "\(self.baseURL)/channel/detail/\(ID)")!) { (data, response, error) in
             if data != nil {
                 do {
                     return callback(try JSONDecoder().decode(ChannelDetail.self, from: data!))
