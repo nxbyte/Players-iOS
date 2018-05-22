@@ -8,40 +8,40 @@
 import Foundation
 
 /* Data Structure: Stores Video Information */
-struct VideoEntry :Decodable {
-    let result    :VideoResult,
-        detail    :VideoDetail
+struct VideoEntry : Decodable {
+    let result    : VideoResult,
+        detail    : VideoDetail
 }
 
 /* Data Structure: Stores Video Metadata */
-struct VideoResult  :Decodable {
-    let title       :String,
-        thumbnail   :URL,
-        videoid     :String,
-        channelname :String,
-        channelid   :String,
-        duration    :String,
-        viewcount   :String
+struct VideoResult  : Decodable {
+    let title       : String,
+        thumbnail   : URL,
+        videoid     : String,
+        channelname : String,
+        channelid   : String,
+        duration    : String,
+        viewcount   : String
 }
 
 /* Data Structure: Stores Video Specific Information */
-struct VideoDetail  :Decodable {
-    let description :String?,
-        mp4         :URL?,
-        like        :String?,
-        dislike     :String?
+struct VideoDetail  : Decodable {
+    let description : String?,
+        mp4         : URL?,
+        like        : String?,
+        dislike     : String?
 }
 
 /* Data Structure: Stores Channel Information */
-struct ChannelDetail:Decodable {
-    let description :String,
-        thumbnail   :URL?
+struct ChannelDetail : Decodable {
+    let description  : String,
+        thumbnail    : URL?
 }
 
 /* Data Structure: Stores Search Query Response Information */
-struct SearchResult :Decodable {
-    let nextToken   :String,
-        results     :[VideoResult]
+struct SearchResult : Decodable {
+    let nextToken   : String,
+        results     : [VideoResult]
 }
 
 /* Data Structure: Stores Search Query Information for a Search Request */
@@ -60,9 +60,9 @@ struct SearchQuery : CustomStringConvertible {
 public final class Cloud
 {
     #if DEBUG
-        static var baseURL : String = "https://customURL-beta.com"
+        static var baseURL : String = "https://custom_backend.com"
     #else
-        static var baseURL : String = "https://customURL.com"
+        static var baseURL : String = "https://custom_backend.com"
     #endif
     
     /** Returns an array of recent videos from a String of Channel ID Strings seperated by commas */
